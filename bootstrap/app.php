@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'check.setup' => \App\Http\Middleware\CheckSetup::class,
+            'check.identitas.desa' => \App\Http\Middleware\CheckIdentitasDesa::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
