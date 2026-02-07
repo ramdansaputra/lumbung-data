@@ -24,6 +24,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\SetupController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,66 +108,77 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | STATISTIK DESA
     |--------------------------------------------------------------------------
     */
-    Route::get('/statistik/kependudukan', function () {
-        $data = [
-            'total_penduduk'  => 1240,
-            'laki_laki'       => 640,
-            'perempuan'       => 600,
-            'kepala_keluarga' => 320,
-            'rt'              => 12,
-            'rw'              => 4,
+    Route::get('/statistik/kependudukan', [\App\Http\Controllers\Admin\StatistikController::class, 'kependudukan'])->name('statistik.kependudukan');
 
-            'usia' => [
-                'balita' => 120,
-                'remaja' => 260,
-                'dewasa' => 640,
-                'lansia' => 220,
-            ],
+    Route::get('/statistik/laporan-bulanan', function (\Illuminate\Http\Request $request) {
+        // Bulan dan tahun bisa diteruskan via query ?month=1&year=2024
+        $month = $request->query('month');
+        $year = $request->query('year');
 
-            'pendidikan' => [
-                ['label' => 'Tidak Sekolah', 'jumlah' => 80],
-                ['label' => 'SD / Sederajat', 'jumlah' => 420],
-                ['label' => 'SMP', 'jumlah' => 310],
-                ['label' => 'SMA', 'jumlah' => 290],
-                ['label' => 'Perguruan Tinggi', 'jumlah' => 140],
-            ],
+        $now = Carbon::now();
+        if ($month && $year) {
+            try {
+                $start = Carbon::createFromDate((int)$year, (int)$month, 1)->startOfDay();
+            } catch (\Exception $e) {
+                $start = $now->copy()->startOfMonth();
+            }
+        } else {
+            $start = $now->copy()->startOfMonth();
+        }
+        $end = $start->copy()->endOfMonth()->endOfDay();
 
-            'pekerjaan' => [
-                ['label' => 'Petani', 'jumlah' => 320],
-                ['label' => 'Buruh', 'jumlah' => 260],
-                ['label' => 'Pedagang', 'jumlah' => 180],
-                ['label' => 'PNS', 'jumlah' => 70],
-                ['label' => 'Wiraswasta', 'jumlah' => 210],
-            ],
+        $year = $start->year;
+        $month = $start->month;
 
-            'agama' => [
-                ['label' => 'Islam', 'jumlah' => 1150],
-                ['label' => 'Kristen', 'jumlah' => 60],
-                ['label' => 'Katolik', 'jumlah' => 20],
-                ['label' => 'Hindu', 'jumlah' => 5],
-                ['label' => 'Budha', 'jumlah' => 5],
-            ],
+        // Total penduduk hidup saat ini
+        $total_penduduk = \App\Models\Penduduk::where('status_hidup', 'hidup')->count();
+
+        // Kelahiran: penduduk yang ber-tanggal_lahir pada bulan ini dan catatan dibuat pada bulan ini
+        $lahir = \App\Models\Penduduk::whereYear('tanggal_lahir', $year)
+            ->whereMonth('tanggal_lahir', $month)
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
+
+        // Penduduk baru yang tercatat pada bulan ini
+        $created = \App\Models\Penduduk::whereBetween('created_at', [$start, $end])->count();
+
+        // Pendatang: entri baru selain kelahiran
+        $datang = max(0, $created - $lahir);
+
+        // Kematian: penduduk yang status_hidup berubah menjadi 'meninggal' pada bulan ini (updated_at)
+        $meninggal = \App\Models\Penduduk::where('status_hidup', 'meninggal')
+            ->whereBetween('updated_at', [$start, $end])
+            ->count();
+
+        // Pindah: tidak ada field eksplisit, set 0 (atau modifikasi jika ada tabel mutasi)
+        $pindah = 0;
+
+        $mutasi = [
+            'lahir' => $lahir,
+            'meninggal' => $meninggal,
+            'datang' => $datang,
+            'pindah' => $pindah,
         ];
 
-        return view('admin.statistik.kependudukan', compact('data'));
-    })->name('statistik.kependudukan');
+        // Detail laporan dengan persentase terhadap total penduduk
+        $makePercent = function ($count) use ($total_penduduk) {
+            $pct = $total_penduduk > 0 ? round(($count / $total_penduduk) * 100, 2) : 0;
+            $sign = $pct >= 0 ? '+' : '';
+            return $sign . $pct . '%';
+        };
 
-    Route::get('/statistik/laporan-bulanan', function () {
+        $laporan = [
+            ['kategori' => 'Kelahiran', 'jumlah' => $lahir, 'persen' => $makePercent($lahir)],
+            ['kategori' => 'Kematian', 'jumlah' => $meninggal, 'persen' => $makePercent($meninggal)],
+            ['kategori' => 'Pendatang', 'jumlah' => $datang, 'persen' => $makePercent($datang)],
+            ['kategori' => 'Pindah', 'jumlah' => $pindah, 'persen' => $makePercent($pindah)],
+        ];
+
         $data = [
-            'bulan' => 'Januari 2024',
-            'total_penduduk' => 1240,
-            'mutasi' => [
-                'lahir' => 5,
-                'meninggal' => 2,
-                'datang' => 3,
-                'pindah' => 4,
-            ],
-            'laporan' => [
-                ['kategori' => 'Kelahiran', 'jumlah' => 5, 'persen' => '+0.4%'],
-                ['kategori' => 'Kematian', 'jumlah' => 2, 'persen' => '-0.16%'],
-                ['kategori' => 'Pendatang', 'jumlah' => 3, 'persen' => '+0.24%'],
-                ['kategori' => 'Pindah', 'jumlah' => 4, 'persen' => '-0.32%'],
-            ]
+            'bulan' => $start->translatedFormat('F Y'),
+            'total_penduduk' => $total_penduduk,
+            'mutasi' => $mutasi,
+            'laporan' => $laporan,
         ];
 
         return view('admin.statistik.laporan-bulanan', compact('data'));
