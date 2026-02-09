@@ -3,236 +3,153 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SekretariatInformasiPublik;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class SekretariatController extends Controller
-{
+class SekretariatController extends Controller {
     /**
-     * Display informasi publik page
+     * LIST DATA
      */
-    public function informasiPublik()
-    {
-        return view('admin.sekretariat.informasi-publik');
+    public function index(Request $request) {
+        $informasiPublik = SekretariatInformasiPublik::query()
+            ->when($request->search, function ($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%');
+            })
+            ->when($request->kategori, function ($q) use ($request) {
+                $q->where('kategori', $request->kategori);
+            })
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->orderBy('tanggal_publikasi', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.sekretariat.informasi-publik', compact('informasiPublik'));
     }
 
     /**
-     * Display inventaris page
+     * FORM CREATE
      */
-    public function inventaris()
-    {
-        return view('admin.sekretariat.inventaris');
+    public function create() {
+        return view('admin.sekretariat.informasi-publik-create');
     }
 
     /**
-     * Display klasifikasi surat page
+     * SIMPAN DATA
      */
-    public function klasifikasiSurat()
-    {
-        return view('admin.sekretariat.klasifikasi-surat');
-    }
-
-    // ============================================
-    // INFORMASI PUBLIK METHODS
-    // ============================================
-
-    /**
-     * Store new informasi publik
-     */
-    public function storeInformasiPublik(Request $request)
-    {
+    public function store(Request $request) {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'isi' => 'required|string',
+            'ringkasan' => 'nullable|string',
+            'kategori' => 'required|in:berkala,serta_merta,setiap_saat,dikecualikan',
+            'status' => 'required|in:aktif,arsip,nonaktif',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'tanggal_publikasi' => 'required|date',
-            'status' => 'required|in:draft,published',
         ]);
 
-        // TODO: Simpan informasi publik ke database
-        // Example: InformasiPublik::create($validated);
+        // Upload file jika ada
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('informasi-publik', $fileName, 'public');
+            $validated['file'] = $filePath;
+        }
 
-        return redirect()->route('admin.sekretariat.informasi-publik')
+        SekretariatInformasiPublik::create($validated);
+
+        return redirect()
+            ->route('admin.sekretariat.informasi-publik.index')
             ->with('success', 'Informasi publik berhasil ditambahkan');
     }
 
+
     /**
-     * Update informasi publik
+     * FORM EDIT
      */
-    public function updateInformasiPublik(Request $request, $id)
-    {
+    public function edit($id) {
+        $informasiPublik = SekretariatInformasiPublik::findOrFail($id);
+        return view('admin.sekretariat.informasi-publik-edit', compact('informasiPublik'));
+    }
+
+    /**
+     * UPDATE DATA
+     */
+    public function update(Request $request, $id) {
+        $informasiPublik = SekretariatInformasiPublik::findOrFail($id);
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'isi' => 'required|string',
+            'ringkasan' => 'nullable|string',
+            'kategori' => 'required|in:berkala,serta_merta,setiap_saat,dikecualikan',
+            'status' => 'required|in:aktif,arsip,nonaktif',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'tanggal_publikasi' => 'required|date',
-            'status' => 'required|in:draft,published',
         ]);
 
-        // TODO: Update informasi publik di database
-        // Example: InformasiPublik::findOrFail($id)->update($validated);
+        // Jika upload file baru
+        if ($request->hasFile('file')) {
+            // Hapus file lama jika ada
+            if ($informasiPublik->file && Storage::disk('public')->exists($informasiPublik->file)) {
+                Storage::disk('public')->delete($informasiPublik->file);
+            }
 
-        return redirect()->route('admin.sekretariat.informasi-publik')
+            // Upload file baru
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('informasi-publik', $fileName, 'public');
+            $validated['file'] = $filePath;
+        }
+
+        $informasiPublik->update($validated);
+
+        return redirect()
+            ->route('admin.sekretariat.informasi-publik.index')
             ->with('success', 'Informasi publik berhasil diperbarui');
     }
 
-    /**
-     * Delete informasi publik
-     */
-    public function destroyInformasiPublik($id)
-    {
-        // TODO: Hapus informasi publik dari database
-        // Example: InformasiPublik::findOrFail($id)->delete();
 
-        return redirect()->route('admin.sekretariat.informasi-publik')
+    /**
+     * HAPUS DATA
+     */
+    public function destroy($id) {
+        $data = SekretariatInformasiPublik::findOrFail($id);
+
+        // Hapus file jika ada
+        if ($data->unggah_dokumen && Storage::disk('public')->exists($data->unggah_dokumen)) {
+            Storage::disk('public')->delete($data->unggah_dokumen);
+        }
+
+        $data->delete();
+
+        return redirect()
+            ->route('admin.sekretariat.informasi-publik.index')
             ->with('success', 'Informasi publik berhasil dihapus');
     }
 
-    // ============================================
-    // INVENTARIS METHODS
-    // ============================================
-
     /**
-     * Store new inventaris
+     * DOWNLOAD FILE
      */
-    public function storeInventaris(Request $request)
-    {
-        $validated = $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'jumlah' => 'required|integer|min:1',
-            'kondisi' => 'required|in:baik,rusak,perlu_perbaikan',
-            'lokasi' => 'required|string',
-            'tanggal_perolehan' => 'required|date',
-            'harga_perolehan' => 'nullable|numeric|min:0',
-        ]);
+    public function download($id) {
+        $data = SekretariatInformasiPublik::findOrFail($id);
 
-        // TODO: Simpan inventaris ke database
-        // Example: Inventaris::create($validated);
+        if (!$data->unggah_dokumen || !Storage::disk('public')->exists($data->unggah_dokumen)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan');
+        }
 
-        return redirect()->route('admin.sekretariat.inventaris')
-            ->with('success', 'Inventaris berhasil ditambahkan');
+        return Storage::disk('public')->download($data->unggah_dokumen);
     }
 
+
     /**
-     * Update inventaris
+     * HALAMAN LAIN
      */
-    public function updateInventaris(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'jumlah' => 'required|integer|min:1',
-            'kondisi' => 'required|in:baik,rusak,perlu_perbaikan',
-            'lokasi' => 'required|string',
-            'tanggal_perolehan' => 'required|date',
-            'harga_perolehan' => 'nullable|numeric|min:0',
-        ]);
-
-        // TODO: Update inventaris di database
-        // Example: Inventaris::findOrFail($id)->update($validated);
-
-        return redirect()->route('admin.sekretariat.inventaris')
-            ->with('success', 'Inventaris berhasil diperbarui');
+    public function inventaris() {
+        return view('admin.sekretariat.inventaris');
     }
 
-    /**
-     * Delete inventaris
-     */
-    public function destroyInventaris($id)
-    {
-        // TODO: Hapus inventaris dari database
-        // Example: Inventaris::findOrFail($id)->delete();
-
-        return redirect()->route('admin.sekretariat.inventaris')
-            ->with('success', 'Inventaris berhasil dihapus');
-    }
-
-    // ============================================
-    // KLASIFIKASI SURAT METHODS
-    // ============================================
-
-    /**
-     * Store new klasifikasi surat
-     */
-    public function storeKlasifikasiSurat(Request $request)
-    {
-        $validated = $request->validate([
-            'kode_klasifikasi' => 'required|string|max:50|unique:klasifikasi_surat',
-            'nama_klasifikasi' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'uraian' => 'required|string',
-            'retensi_aktif' => 'required|integer|min:1',
-            'retensi_inaktif' => 'required|integer|min:1',
-        ]);
-
-        // TODO: Simpan klasifikasi surat ke database
-        // Example: KlasifikasiSurat::create($validated);
-
-        return redirect()->route('admin.sekretariat.klasifikasi-surat')
-            ->with('success', 'Klasifikasi surat berhasil ditambahkan');
-    }
-
-    /**
-     * Update klasifikasi surat
-     */
-    public function updateKlasifikasiSurat(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'kode_klasifikasi' => 'required|string|max:50|unique:klasifikasi_surat,kode_klasifikasi,'.$id,
-            'nama_klasifikasi' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'uraian' => 'required|string',
-            'retensi_aktif' => 'required|integer|min:1',
-            'retensi_inaktif' => 'required|integer|min:1',
-        ]);
-
-        // TODO: Update klasifikasi surat di database
-        // Example: KlasifikasiSurat::findOrFail($id)->update($validated);
-
-        return redirect()->route('admin.sekretariat.klasifikasi-surat')
-            ->with('success', 'Klasifikasi surat berhasil diperbarui');
-    }
-
-    /**
-     * Delete klasifikasi surat
-     */
-    public function destroyKlasifikasiSurat($id)
-    {
-        // TODO: Hapus klasifikasi surat dari database
-        // Example: KlasifikasiSurat::findOrFail($id)->delete();
-
-        return redirect()->route('admin.sekretariat.klasifikasi-surat')
-            ->with('success', 'Klasifikasi surat berhasil dihapus');
-    }
-
-    // ============================================
-    // EXPORT METHODS
-    // ============================================
-
-    /**
-     * Export data to Excel
-     */
-    public function export($type)
-    {
-        // TODO: Implement export functionality
-        // Example using Laravel Excel:
-        // return Excel::download(new SekretariatExport($type), "sekretariat-{$type}.xlsx");
-
-        return redirect()->back()
-            ->with('info', 'Fitur export dalam pengembangan');
-    }
-
-    /**
-     * Print report
-     */
-    public function print($type)
-    {
-        // TODO: Generate PDF report
-        // Example:
-        // $pdf = PDF::loadView("admin.sekretariat.print-{$type}");
-        // return $pdf->stream("laporan-{$type}.pdf");
-
-        return redirect()->back()
-            ->with('info', 'Fitur cetak dalam pengembangan');
+    public function klasifikasiSurat() {
+        return view('admin.sekretariat.klasifikasi-surat');
     }
 }

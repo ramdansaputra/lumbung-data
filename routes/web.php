@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ArtikelController;
@@ -312,15 +312,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     Route::get('/layanan-surat/daftar-persyaratan', [App\Http\Controllers\Admin\LayananSuratController::class, 'daftarPersyaratan'])->name('layanan-surat.daftar-persyaratan');
     Route::post('/layanan-surat/template', [App\Http\Controllers\Admin\LayananSuratController::class, 'storeTemplate'])->name('layanan-surat.storeTemplate');
 
-    /*
+        /*
     |--------------------------------------------------------------------------
     | SEKRETARIAT
     |--------------------------------------------------------------------------
     */
-    Route::get('/sekretariat/informasi-publik', [App\Http\Controllers\Admin\SekretariatController::class, 'informasiPublik'])->name('sekretariat.informasi-publik');
-    Route::get('/sekretariat/inventaris', [App\Http\Controllers\Admin\SekretariatController::class, 'inventaris'])->name('sekretariat.inventaris');
-    Route::get('/sekretariat/klasifikasi-surat', [App\Http\Controllers\Admin\SekretariatController::class, 'klasifikasiSurat'])->name('sekretariat.klasifikasi-surat');
-
+        Route::get('/sekretariat/informasi-publik', [App\Http\Controllers\Admin\SekretariatController::class, 'index'])->name('sekretariat.informasi-publik.index');
+        Route::get('/sekretariat/informasi-publik/create', [App\Http\Controllers\Admin\SekretariatController::class, 'create'])->name('sekretariat.informasi-publik.create');
+        Route::post('/sekretariat/informasi-publik', [App\Http\Controllers\Admin\SekretariatController::class, 'store'])->name('sekretariat.informasi-publik.store');
+        Route::get('/sekretariat/informasi-publik/{id}/edit', [App\Http\Controllers\Admin\SekretariatController::class, 'edit'])->name('sekretariat.informasi-publik.edit');
+        Route::put('/sekretariat/informasi-publik/{id}', [App\Http\Controllers\Admin\SekretariatController::class, 'update'])->name('sekretariat.informasi-publik.update');
+        Route::delete('/sekretariat/informasi-publik/{id}', [App\Http\Controllers\Admin\SekretariatController::class, 'destroy'])->name('sekretariat.informasi-publik.destroy');
+        Route::get('/sekretariat/informasi-publik/{id}/download', [App\Http\Controllers\Admin\SekretariatController::class, 'download'])->name('sekretariat.informasi-publik.download'); // <- INI ROUTE BARU UNTUK DOWNLOAD
+        Route::get('/sekretariat/inventaris', [App\Http\Controllers\Admin\SekretariatController::class, 'inventaris'])->name('sekretariat.inventaris');
+        Route::get('/sekretariat/klasifikasi-surat', [App\Http\Controllers\Admin\SekretariatController::class, 'klasifikasiSurat'])->name('sekretariat.klasifikasi-surat');
     /*
     |--------------------------------------------------------------------------
     | ANALISIS
