@@ -12,15 +12,19 @@ class StatistikController extends Controller
 {
     public function index()
     {
-        // Ambil data penduduk hidup
+        // Ambil data penduduk hidup (untuk perhitungan usia dan agregasi lainnya)
         $penduduks = Penduduk::where('status_hidup', 'hidup')
             ->select('tanggal_lahir', 'jenis_kelamin', 'pendidikan', 'pekerjaan', 'status_perkawinan')
             ->get();
 
-        // Total & gender
-        $total_penduduk = $penduduks->count();
-        $laki_laki = $penduduks->where('jenis_kelamin', 'Laki-laki')->count();
-        $perempuan = $penduduks->where('jenis_kelamin', 'Perempuan')->count();
+        // Total & gender menggunakan query Eloquent langsung (DB menyimpan 'L' untuk laki, 'P' untuk perempuan)
+        $total_penduduk = Penduduk::where('status_hidup', 'hidup')->count();
+        $laki_laki = Penduduk::where('status_hidup', 'hidup')
+            ->where('jenis_kelamin', 'L')
+            ->count();
+        $perempuan = Penduduk::where('status_hidup', 'hidup')
+            ->where('jenis_kelamin', 'P')
+            ->count();
 
         // Kelompok umur menggunakan Carbon
         $usia = [
@@ -126,14 +130,45 @@ class StatistikController extends Controller
         return view('admin.statistik.statistik', compact('data'));
     }
 
+    public function penduduk()
+    {
+        // Get all population data with relationships for detailed report
+        $penduduk = Penduduk::with(['keluargas'])
+            ->where('status_hidup', 'hidup')
+            ->orderBy('nama')
+            ->paginate(50);
+
+        // Statistics for summary cards
+        $total_penduduk = Penduduk::where('status_hidup', 'hidup')->count();
+        $laki_laki = Penduduk::where('status_hidup', 'hidup')
+            ->where('jenis_kelamin', 'L')
+            ->count();
+        $perempuan = Penduduk::where('status_hidup', 'hidup')
+            ->where('jenis_kelamin', 'P')
+            ->count();
+        $kepala_keluarga = Keluarga::count();
+
+        $data = [
+            'penduduk' => $penduduk,
+            'total_penduduk' => $total_penduduk,
+            'laki_laki' => $laki_laki,
+            'perempuan' => $perempuan,
+            'kepala_keluarga' => $kepala_keluarga,
+        ];
+
+        return view('admin.statistik.penduduk', compact('data'));
+    }
+
     public function kependudukan()
     {
         // Total & Gender Statistics
         $total_penduduk = Penduduk::where('status_hidup', 'hidup')->count();
         $laki_laki = Penduduk::where('status_hidup', 'hidup')
-            ->where('jenis_kelamin', 'Laki-laki')
+            ->where('jenis_kelamin', 'L')
             ->count();
-        $perempuan = $total_penduduk - $laki_laki;
+        $perempuan = Penduduk::where('status_hidup', 'hidup')
+            ->where('jenis_kelamin', 'P')
+            ->count();
 
         // Kepala Keluarga (head of family)
         $kepala_keluarga = Keluarga::count();
@@ -217,6 +252,46 @@ class StatistikController extends Controller
             }
         }
 
+        // Blood Type (Golongan Darah)
+        $golongan_darah_data = Penduduk::select('golongan_darah')
+            ->where('status_hidup', 'hidup')
+            ->whereNotNull('golongan_darah')
+            ->groupBy('golongan_darah')
+            ->selectRaw('golongan_darah as label, COUNT(*) as jumlah')
+            ->get()
+            ->toArray();
+
+        $golongan_darah = [];
+        foreach ($golongan_darah_data as $item) {
+            if ($item['label'] && $item['label'] !== '') {
+                $golongan_darah[] = [
+                    'label' => $item['label'],
+                    'jumlah' => $item['jumlah']
+                ];
+            }
+        }
+
+        // Wilayah/Dusun (Region/Hamlet)
+        $wilayah_data = Penduduk::select('wilayah.dusun')
+            ->join('wilayah', 'penduduk.wilayah_id', '=', 'wilayah.id')
+            ->where('penduduk.status_hidup', 'hidup')
+            ->whereNotNull('wilayah.dusun')
+            ->groupBy('wilayah.dusun')
+            ->selectRaw('wilayah.dusun as label, COUNT(*) as jumlah')
+            ->orderByRaw('jumlah DESC')
+            ->get()
+            ->toArray();
+
+        $wilayah = [];
+        foreach ($wilayah_data as $item) {
+            if ($item['label'] && $item['label'] !== '') {
+                $wilayah[] = [
+                    'label' => $item['label'],
+                    'jumlah' => $item['jumlah']
+                ];
+            }
+        }
+
         $data = [
             'total_penduduk'  => $total_penduduk,
             'laki_laki'       => $laki_laki,
@@ -233,8 +308,85 @@ class StatistikController extends Controller
             'pendidikan' => $pendidikan,
             'pekerjaan' => $pekerjaan,
             'agama' => $agama,
+            'golongan_darah' => $golongan_darah,
+            'wilayah' => $wilayah,
         ];
 
         return view('admin.statistik.kependudukan', compact('data'));
+    }
+
+    public function laporanBulanan(\Illuminate\Http\Request $request)
+    {
+        // Bulan dan tahun bisa diteruskan via query ?month=1&year=2024
+        $month = $request->query('month');
+        $year = $request->query('year');
+
+        $now = Carbon::now();
+        if ($month && $year) {
+            try {
+                $start = Carbon::createFromDate((int)$year, (int)$month, 1)->startOfDay();
+            } catch (\Exception $e) {
+                $start = $now->copy()->startOfMonth();
+            }
+        } else {
+            $start = $now->copy()->startOfMonth();
+        }
+        $end = $start->copy()->endOfMonth()->endOfDay();
+
+        $year = $start->year;
+        $month = $start->month;
+
+        // Total penduduk hidup saat ini
+        $total_penduduk = Penduduk::where('status_hidup', 'hidup')->count();
+
+        // Kelahiran: penduduk yang ber-tanggal_lahir pada bulan ini dan catatan dibuat pada bulan ini
+        $lahir = Penduduk::whereYear('tanggal_lahir', $year)
+            ->whereMonth('tanggal_lahir', $month)
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
+
+        // Penduduk baru yang tercatat pada bulan ini
+        $created = Penduduk::whereBetween('created_at', [$start, $end])->count();
+
+        // Pendatang: entri baru selain kelahiran
+        $datang = max(0, $created - $lahir);
+
+        // Kematian: penduduk yang status_hidup berubah menjadi 'meninggal' pada bulan ini (updated_at)
+        $meninggal = Penduduk::where('status_hidup', 'meninggal')
+            ->whereBetween('updated_at', [$start, $end])
+            ->count();
+
+        // Pindah: tidak ada field eksplisit, set 0 (atau modifikasi jika ada tabel mutasi)
+        $pindah = 0;
+
+        $mutasi = [
+            'lahir' => $lahir,
+            'meninggal' => $meninggal,
+            'datang' => $datang,
+            'pindah' => $pindah,
+        ];
+
+        // Detail laporan dengan persentase terhadap total penduduk
+        $makePercent = function ($count) use ($total_penduduk) {
+            $pct = $total_penduduk > 0 ? round(($count / $total_penduduk) * 100, 2) : 0;
+            $sign = $pct >= 0 ? '+' : '';
+            return $sign . $pct . '%';
+        };
+
+        $laporan = [
+            ['kategori' => 'Kelahiran', 'jumlah' => $lahir, 'persen' => $makePercent($lahir)],
+            ['kategori' => 'Kematian', 'jumlah' => $meninggal, 'persen' => $makePercent($meninggal)],
+            ['kategori' => 'Pendatang', 'jumlah' => $datang, 'persen' => $makePercent($datang)],
+            ['kategori' => 'Pindah', 'jumlah' => $pindah, 'persen' => $makePercent($pindah)],
+        ];
+
+        $data = [
+            'bulan' => $start->translatedFormat('F Y'),
+            'total_penduduk' => $total_penduduk,
+            'mutasi' => $mutasi,
+            'laporan' => $laporan,
+        ];
+
+        return view('admin.statistik.laporan-bulanan', compact('data'));
     }
 }

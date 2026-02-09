@@ -1,26 +1,26 @@
 @extends('layouts.admin')
 
-@section('title', 'Data Penduduk')
+@section('title', 'Laporan Penduduk')
 
 @section('content')
 
 <!-- ================= HEADER ================= -->
 <div class="mb-6 flex items-center justify-between">
     <div>
-        <h1 class="text-2xl font-extrabold text-slate-800">Data Penduduk</h1>
+        <h1 class="text-2xl font-extrabold text-slate-800">Laporan Penduduk</h1>
         <p class="text-sm text-slate-500">
-            Informasi detail penduduk desa
+            Database induk penduduk desa - sumber data utama untuk semua jenis laporan lainnya
         </p>
     </div>
 
     <div class="flex gap-3">
-        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        <button onclick="exportPDF()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
             Export PDF
         </button>
-        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+        <button onclick="exportExcel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
@@ -30,8 +30,7 @@
 </div>
 
 <!-- ================= SUMMARY CARDS ================= -->
-<div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
-
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
     <div class="bg-white p-5 rounded-xl shadow">
         <p class="text-xs text-slate-500">Total Penduduk</p>
         <h3 class="text-2xl font-bold mt-1">{{ number_format($data['total_penduduk']) }}</h3>
@@ -51,131 +50,226 @@
         <p class="text-xs">Perempuan</p>
         <h3 class="text-2xl font-bold mt-1">{{ number_format($data['perempuan']) }}</h3>
     </div>
-
-    <div class="bg-white p-5 rounded-xl shadow text-green-600">
-        <p class="text-xs">Usia Produktif</p>
-        <h3 class="text-2xl font-bold mt-1">{{ number_format($data['usia_produktif']) }}</h3>
-    </div>
-
-    <div class="bg-white p-5 rounded-xl shadow text-orange-600">
-        <p class="text-xs">Usia Non Produktif</p>
-        <h3 class="text-2xl font-bold mt-1">{{ number_format($data['usia_non_produktif']) }}</h3>
-    </div>
-
 </div>
 
-<!-- ================= DISTRIBUSI USIA ================= -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-
-    <!-- DISTRIBUSI USIA -->
-    <div class="bg-white rounded-xl shadow p-6">
-        <h4 class="font-semibold mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-            Distribusi Usia
-        </h4>
-
-        <div class="space-y-3">
-            @foreach($data['distribusi_usia'] as $range => $jumlah)
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <span class="text-sm font-medium">{{ $range }} tahun</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-sm text-slate-600">{{ number_format($jumlah) }}</span>
-                    <span class="text-xs text-slate-500">
-                        ({{ round(($jumlah / $data['total_penduduk']) * 100, 1) }}%)
-                    </span>
-                </div>
-            </div>
-            @endforeach
+<!-- ================= SEARCH AND FILTER ================= -->
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+    <h3 class="text-sm font-semibold text-gray-900 mb-4">Filter Data</h3>
+    <form method="GET" action="{{ route('admin.statistik.penduduk') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label class="block text-xs font-medium text-gray-700 mb-2">Pencarian</label>
+            <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Cari nama atau NIK..."
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
         </div>
-    </div>
 
-    <!-- STATUS PERKAWINAN -->
-    <div class="bg-white rounded-xl shadow p-6">
-        <h4 class="font-semibold mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-            </svg>
-            Status Perkawinan
-        </h4>
-
-        <div class="space-y-3">
-            @foreach($data['status_perkawinan'] as $status => $jumlah)
-            <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                        <span class="text-xs font-bold text-green-600">{{ substr($jumlah, 0, 2) }}</span>
-                    </div>
-                    <div>
-                        <p class="font-medium text-green-800">{{ ucwords(str_replace('_', ' ', $status)) }}</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="font-bold text-green-600">{{ number_format($jumlah) }}</p>
-                    <p class="text-xs text-green-500">orang</p>
-                </div>
-            </div>
-            @endforeach
+        <div>
+            <label class="block text-xs font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+            <select name="jenis_kelamin"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                <option value="" {{ request('jenis_kelamin') == '' ? 'selected' : '' }}>Semua</option>
+                <option value="L" {{ request('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="P" {{ request('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+            </select>
         </div>
-    </div>
 
+        <div>
+            <label class="block text-xs font-medium text-gray-700 mb-2">Agama</label>
+            <select name="agama"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                <option value="" {{ request('agama') == '' ? 'selected' : '' }}>Semua Agama</option>
+                <option value="Islam" {{ request('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                <option value="Kristen" {{ request('agama') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                <option value="Katolik" {{ request('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                <option value="Hindu" {{ request('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                <option value="Budha" {{ request('agama') == 'Budha' ? 'selected' : '' }}>Budha</option>
+            </select>
+        </div>
+
+        <div class="flex items-end gap-2">
+            <button type="submit" class="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                Filter
+            </button>
+            <a href="{{ route('admin.statistik.penduduk') }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                Reset
+            </a>
+        </div>
+    </form>
 </div>
 
-<!-- ================= ANALISIS ================= -->
-<div class="bg-white rounded-xl shadow p-6">
-    <h4 class="font-semibold mb-4">Analisis Demografi</h4>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- RASIO JENIS KELAMIN -->
-        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-            <h5 class="font-medium text-blue-800 mb-2">Rasio Jenis Kelamin</h5>
-            <div class="text-3xl font-bold text-blue-600 mb-1">
-                {{ round(($data['laki_laki'] / $data['perempuan']) * 100, 1) }}%
-            </div>
-            <p class="text-xs text-blue-600">laki-laki per 100 perempuan</p>
-        </div>
-
-        <!-- DEPENDENCY RATIO -->
-        <div class="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
-            <h5 class="font-medium text-green-800 mb-2">Dependency Ratio</h5>
-            <div class="text-3xl font-bold text-green-600 mb-1">
-                {{ round(($data['usia_non_produktif'] / $data['usia_produktif']) * 100, 1) }}%
-            </div>
-            <p class="text-xs text-green-600">non produktif per produktif</p>
-        </div>
-
-        <!-- RATA-RATA ANGGOTA KELUARGA -->
-        <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
-            <h5 class="font-medium text-purple-800 mb-2">Rata-rata Anggota Keluarga</h5>
-            <div class="text-3xl font-bold text-purple-600 mb-1">
-                {{ round($data['total_penduduk'] / $data['kepala_keluarga'], 1) }}
-            </div>
-            <p class="text-xs text-purple-600">orang per KK</p>
-        </div>
-
+<!-- ================= DATA TABLE ================= -->
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">NIK</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No KK</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Jenis Kelamin</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tempat Lahir</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal Lahir</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Agama</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status Hubungan Keluarga</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Pendidikan</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Pekerjaan</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status Kawin</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @forelse($data['penduduk'] as $index => $p)
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 text-sm text-gray-900">{{ $data['penduduk']->firstItem() + $index }}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $p->nik }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">{{ $p->nama }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                        @php
+                            $keluarga = $p->keluargas()->first();
+                        @endphp
+                        {{ $keluarga ? $keluarga->no_kk : '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $p->jenis_kelamin == 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' }}">
+                            {{ $p->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->tempat_lahir }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->tanggal_lahir ? $p->tanggal_lahir->format('d/m/Y') : '-' }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->agama }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                        @php
+                            $hubungan = $p->keluargas()->first();
+                        @endphp
+                        @if($hubungan)
+                            {{ ucfirst(str_replace('_', ' ', $hubungan->pivot->hubungan_keluarga)) }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->alamat }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->pendidikan ?? '-' }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->pekerjaan ?? '-' }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">{{ $p->status_kawin ?? '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="13" class="px-6 py-12 text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                            <p class="text-sm font-medium text-gray-900">Tidak ada data penduduk</p>
+                            <p class="text-sm text-gray-500 mt-1">Data penduduk belum tersedia</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
-    <!-- REKOMENDASI -->
-    <div class="mt-6 p-4 bg-slate-50 rounded-lg border">
-        <h5 class="font-medium text-slate-700 mb-2">Rekomendasi</h5>
-        <p class="text-sm text-slate-600">
-            @if($data['usia_produktif'] > $data['usia_non_produktif'])
-                Struktur penduduk didominasi usia produktif, potensi pembangunan tinggi.
-            @else
-                Perlu perhatian khusus pada kelompok usia non produktif untuk kesejahteraan sosial.
-            @endif
-            @if(round($data['total_penduduk'] / $data['kepala_keluarga'], 1) > 4)
-                Rata-rata anggota keluarga cukup besar, perlu perhatian pada program KB.
-            @else
-                Ukuran keluarga relatif kecil, mendukung program kesejahteraan keluarga.
-            @endif
-        </p>
+    <!-- Pagination -->
+    @if($data['penduduk']->hasPages())
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div class="flex items-center justify-between">
+            <div class="flex-1 flex justify-between sm:hidden">
+                @if ($data['penduduk']->onFirstPage())
+                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-400 bg-white cursor-not-allowed">
+                    Sebelumnya
+                </span>
+                @else
+                <a href="{{ $data['penduduk']->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                    Sebelumnya
+                </a>
+                @endif
+
+                @if ($data['penduduk']->hasMorePages())
+                <a href="{{ $data['penduduk']->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                    Selanjutnya
+                </a>
+                @else
+                <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-400 bg-white cursor-not-allowed">
+                    Selanjutnya
+                </span>
+                @endif
+            </div>
+
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Menampilkan
+                        <span class="font-medium">{{ $data['penduduk']->firstItem() ?? 0 }}</span>
+                        sampai
+                        <span class="font-medium">{{ $data['penduduk']->lastItem() ?? 0 }}</span>
+                        dari
+                        <span class="font-medium">{{ $data['penduduk']->total() }}</span>
+                        data
+                    </p>
+                </div>
+
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px" aria-label="Pagination">
+                        @if ($data['penduduk']->onFirstPage())
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        @else
+                        <a href="{{ $data['penduduk']->previousPageUrl() }}" class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        @endif
+
+                        @foreach ($data['penduduk']->getUrlRange(1, $data['penduduk']->lastPage()) as $page => $url)
+                        @if ($page == $data['penduduk']->currentPage())
+                        <span class="relative inline-flex items-center px-4 py-2 border border-emerald-500 bg-emerald-50 text-sm font-medium text-emerald-600">
+                            {{ $page }}
+                        </span>
+                        @else
+                        <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            {{ $page }}
+                        </a>
+                        @endif
+                        @endforeach
+
+                        @if ($data['penduduk']->hasMorePages())
+                        <a href="{{ $data['penduduk']->nextPageUrl() }}" class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        @else
+                        <span class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-400 cursor-not-allowed">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        @endif
+                    </nav>
+                </div>
+            </div>
+        </div>
     </div>
+    @endif
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function exportPDF() {
+    // Implement PDF export functionality
+    alert('Fitur export PDF akan segera hadir');
+}
+
+function exportExcel() {
+    // Implement Excel export functionality
+    alert('Fitur export Excel akan segera hadir');
+}
+</script>
+@endpush
