@@ -6,7 +6,7 @@
 <section class="relative h-[90vh] flex items-center overflow-hidden">
     <!-- Background Image with Parallax Effect -->
     <img src="{{ asset('images/desa.jpeg') }}"
-         class="absolute inset-0 w-full h-full object-cover transform scale-110 transition-transform duration-1000">
+        class="absolute inset-0 w-full h-full object-cover transform scale-110 transition-transform duration-1000">
 
     <!-- Gradient Overlay -->
     <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-emerald-800/80 to-teal-900/90"></div>
@@ -39,7 +39,7 @@
         <!-- CTA Buttons -->
         <div class="mt-10 flex flex-wrap gap-4 animate-fade-in-up animation-delay-400">
             <a href="#profil"
-               class="group px-8 py-4 rounded-full bg-white text-emerald-700 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                class="group px-8 py-4 rounded-full bg-white text-emerald-700 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -49,7 +49,7 @@
                 </svg>
             </a>
             <a href="#layanan"
-               class="group px-8 py-4 rounded-full border-2 border-white/40 backdrop-blur-md hover:bg-white/10 font-semibold transition-all duration-300 flex items-center gap-2">
+                class="group px-8 py-4 rounded-full border-2 border-white/40 backdrop-blur-md hover:bg-white/10 font-semibold transition-all duration-300 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
@@ -309,7 +309,7 @@
             <p class="text-slate-600 mt-2">Informasi terbaru seputar kegiatan dan program desa</p>
         </div>
         <a href="{{ route('berita') }}"
-           class="group flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl">
+            class="group flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl">
             Lihat Semua
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -322,7 +322,7 @@
         <div class="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-100">
             <div class="relative overflow-hidden h-56">
                 <img src="{{ $item->gambar ? asset('storage/artikel/' . $item->gambar) : asset('images/desa.jpeg') }}"
-                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                 <div class="absolute top-4 left-4">
                     <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
                         Artikel
@@ -351,7 +351,7 @@
                 </p>
 
                 <a href="{{ route('artikel.show', $item->id) }}"
-                   class="inline-flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
+                    class="inline-flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
                     Baca Selengkapnya
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

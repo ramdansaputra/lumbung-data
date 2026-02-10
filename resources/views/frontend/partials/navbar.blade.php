@@ -41,7 +41,7 @@
         </div>
 
         <a href="{{ url('/admin/dashboard') }}"
-           class="px-5 py-2 rounded-full bg-emerald-600 text-white text-sm">
+            class="px-5 py-2 rounded-full bg-emerald-600 text-white text-sm">
             Login Admin
         </a>
     </div>
