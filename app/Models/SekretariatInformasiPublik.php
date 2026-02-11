@@ -11,15 +11,21 @@ class SekretariatInformasiPublik extends Model {
     protected $table = 'sekretariat_informasi_publik';
 
     protected $fillable = [
-        'judul',
-        'ringkasan',
-        'kategori',
-        'status',
-        'file',
-        'tanggal_publikasi',
+        'judul_dokumen',
+        'tipe_dokumen',
+        'unggah_dokumen',
+        'retensi_dokumen',
+        'satuan_retensi',
+        'kategori_info_publik',
+        'keterangan',
+        'tahun',
+        'tanggal_terbit',
+        'status_terbit',
     ];
 
     protected $casts = [
-        'tanggal_publikasi' => 'date',
+        'tanggal_terbit' => 'date',
+        'tahun' => 'integer',
+        'retensi_dokumen' => 'integer',
     ];
 }

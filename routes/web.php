@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ArtikelController;
@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\BantuanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\IdentitasDesaController;
 use App\Http\Controllers\Admin\InfoDesaController;
-use App\Http\Controllers\Admin\KehadiranController;
 use App\Http\Controllers\Admin\KeluargaController;
 use App\Http\Controllers\Admin\KesehatanController;
 use App\Http\Controllers\Admin\KeuanganController;
@@ -25,6 +24,14 @@ use App\Http\Controllers\SetupController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\JenisKehadiranController;
+use App\Http\Controllers\Admin\KehadiranHarianController;
+use App\Http\Controllers\Admin\JamKerjaController;
+use App\Http\Controllers\Admin\KeteranganController;
+use App\Http\Controllers\Admin\DinasLuarController;
+use App\Http\Controllers\Admin\KehadiranBulananController;
+use App\Http\Controllers\Admin\KehadiranTahunanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +98,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         '/identitas-desa',
         [App\Http\Controllers\Admin\IdentitasDesaController::class, 'update']
     )->name('identitas-desa.update');
+
+    /*
+    |--------------------------------------------------------------------------
+    | ACCOUNT SETTINGS
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/account/setting', [App\Http\Controllers\Admin\AccountController::class, 'index'])->name('account.setting');
+    Route::put('/account/setting', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('account.update');
 });
 
 // Other admin routes - require identitas desa to be filled
@@ -312,20 +327,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     Route::get('/layanan-surat/daftar-persyaratan', [App\Http\Controllers\Admin\LayananSuratController::class, 'daftarPersyaratan'])->name('layanan-surat.daftar-persyaratan');
     Route::post('/layanan-surat/template', [App\Http\Controllers\Admin\LayananSuratController::class, 'storeTemplate'])->name('layanan-surat.storeTemplate');
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | SEKRETARIAT
     |--------------------------------------------------------------------------
     */
-        Route::get('/sekretariat/informasi-publik', [App\Http\Controllers\Admin\SekretariatController::class, 'index'])->name('sekretariat.informasi-publik.index');
-        Route::get('/sekretariat/informasi-publik/create', [App\Http\Controllers\Admin\SekretariatController::class, 'create'])->name('sekretariat.informasi-publik.create');
-        Route::post('/sekretariat/informasi-publik', [App\Http\Controllers\Admin\SekretariatController::class, 'store'])->name('sekretariat.informasi-publik.store');
-        Route::get('/sekretariat/informasi-publik/{id}/edit', [App\Http\Controllers\Admin\SekretariatController::class, 'edit'])->name('sekretariat.informasi-publik.edit');
-        Route::put('/sekretariat/informasi-publik/{id}', [App\Http\Controllers\Admin\SekretariatController::class, 'update'])->name('sekretariat.informasi-publik.update');
-        Route::delete('/sekretariat/informasi-publik/{id}', [App\Http\Controllers\Admin\SekretariatController::class, 'destroy'])->name('sekretariat.informasi-publik.destroy');
-        Route::get('/sekretariat/informasi-publik/{id}/download', [App\Http\Controllers\Admin\SekretariatController::class, 'download'])->name('sekretariat.informasi-publik.download'); // <- INI ROUTE BARU UNTUK DOWNLOAD
-        Route::get('/sekretariat/inventaris', [App\Http\Controllers\Admin\SekretariatController::class, 'inventaris'])->name('sekretariat.inventaris');
-        Route::get('/sekretariat/klasifikasi-surat', [App\Http\Controllers\Admin\SekretariatController::class, 'klasifikasiSurat'])->name('sekretariat.klasifikasi-surat');
+    Route::get('/sekretariat/informasi-publik', [SekretariatController::class, 'index'])->name('sekretariat.informasi-publik.index');
+    Route::get('/sekretariat/informasi-publik/create', [SekretariatController::class, 'create'])->name('sekretariat.informasi-publik.create');
+    Route::post('/sekretariat/informasi-publik', [SekretariatController::class, 'store'])->name('sekretariat.informasi-publik.store');
+    Route::get('/sekretariat/informasi-publik/{id}/edit', [SekretariatController::class, 'edit'])->name('sekretariat.informasi-publik.edit');
+    Route::put('/sekretariat/informasi-publik/{id}', [SekretariatController::class, 'update'])->name('sekretariat.informasi-publik.update');
+    Route::delete('/sekretariat/informasi-publik/{id}', [SekretariatController::class, 'destroy'])->name('sekretariat.informasi-publik.destroy');
+    Route::get('/sekretariat/informasi-publik/{id}/download', [SekretariatController::class, 'download'])->name('sekretariat.informasi-publik.download');
+    Route::get('/sekretariat/inventaris', [SekretariatController::class, 'inventaris'])->name('sekretariat.inventaris');
+    Route::get('/sekretariat/inventaris/create', [SekretariatController::class, 'inventarisCreate'])->name('sekretariat.inventaris.create');
+    Route::post('/sekretariat/inventaris', [SekretariatController::class, 'inventarisStore'])->name('sekretariat.inventaris.store');
+    Route::get('/sekretariat/inventaris/{id}/edit', [SekretariatController::class, 'inventarisEdit'])->name('sekretariat.inventaris.edit');
+    Route::put('/sekretariat/inventaris/{id}', [SekretariatController::class, 'inventarisUpdate'])->name('sekretariat.inventaris.update');
+    Route::delete('/sekretariat/inventaris/{id}', [SekretariatController::class, 'inventarisDestroy'])->name('sekretariat.inventaris.destroy');
+    Route::get('/sekretariat/klasifikasi-surat', [SekretariatController::class, 'klasifikasiSurat'])->name('sekretariat.klasifikasi-surat');
+    Route::get('/sekretariat/klasifikasi-surat/create', [SekretariatController::class, 'klasifikasiSuratCreate'])->name('sekretariat.klasifikasi-surat.create');
+    Route::post('/sekretariat/klasifikasi-surat', [SekretariatController::class, 'klasifikasiSuratStore'])->name('sekretariat.klasifikasi-surat.store');
+    Route::get('/sekretariat/klasifikasi-surat/{id}', [SekretariatController::class, 'klasifikasiSuratShow'])->name('sekretariat.klasifikasi-surat.show');
+    Route::get('/sekretariat/klasifikasi-surat/{id}/edit', [SekretariatController::class, 'klasifikasiSuratEdit'])->name('sekretariat.klasifikasi-surat.edit');
+    Route::put('/sekretariat/klasifikasi-surat/{id}', [SekretariatController::class, 'klasifikasiSuratUpdate'])->name('sekretariat.klasifikasi-surat.update');
+    Route::delete('/sekretariat/klasifikasi-surat/{id}', [SekretariatController::class, 'klasifikasiSuratDestroy'])->name('sekretariat.klasifikasi-surat.destroy');
+
     /*
     |--------------------------------------------------------------------------
     | ANALISIS
@@ -365,22 +392,52 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | KESEHATAN
     |--------------------------------------------------------------------------
     */
+    // Pendataan Kesehatan
     Route::get('/kesehatan/pendataan', [App\Http\Controllers\Admin\KesehatanController::class, 'pendataan'])->name('kesehatan.pendataan');
+    Route::get('/kesehatan/pendataan/create', [App\Http\Controllers\Admin\KesehatanController::class, 'createPendataan'])->name('kesehatan.pendataan.create');
+    Route::get('/kesehatan/pendataan/{id}/edit', [App\Http\Controllers\Admin\KesehatanController::class, 'editPendataan'])->name('kesehatan.pendataan.edit');
+    Route::post('/kesehatan/pendataan', [App\Http\Controllers\Admin\KesehatanController::class, 'storePendataan'])->name('kesehatan.pendataan.store');
+    Route::put('/kesehatan/pendataan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'updatePendataan'])->name('kesehatan.pendataan.update');
+    Route::delete('/kesehatan/pendataan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'destroyPendataan'])->name('kesehatan.pendataan.destroy');
+
     Route::get('/kesehatan/pemantauan', [App\Http\Controllers\Admin\KesehatanController::class, 'pemantauan'])->name('kesehatan.pemantauan');
+    Route::get('/kesehatan/pemantauan/create', [App\Http\Controllers\Admin\KesehatanController::class, 'createPemantauan'])->name('kesehatan.pemantauan.create');
+    Route::get('/kesehatan/pemantauan/{id}/edit', [App\Http\Controllers\Admin\KesehatanController::class, 'editPemantauan'])->name('kesehatan.pemantauan.edit');
+    Route::post('/kesehatan/pemantauan', [App\Http\Controllers\Admin\KesehatanController::class, 'storePemantauan'])->name('kesehatan.pemantauan.store');
+    Route::put('/kesehatan/pemantauan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'updatePemantauan'])->name('kesehatan.pemantauan.update');
+    Route::delete('/kesehatan/pemantauan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'destroyPemantauan'])->name('kesehatan.pemantauan.destroy');
     Route::get('/kesehatan/vaksin', [App\Http\Controllers\Admin\KesehatanController::class, 'vaksin'])->name('kesehatan.vaksin');
     Route::get('/kesehatan/stunting', [App\Http\Controllers\Admin\KesehatanController::class, 'stunting'])->name('kesehatan.stunting');
 
-
     /*
     |--------------------------------------------------------------------------
-    | KEHADIRAN
+    | KEHADIRAN (BARU)
     |--------------------------------------------------------------------------
     */
-    Route::get('/kehadiran/hari-libur', [App\Http\Controllers\Admin\KehadiranController::class, 'hariLibur'])->name('kehadiran.hari-libur');
-    Route::get('/kehadiran/pengaduan', [App\Http\Controllers\Admin\KehadiranController::class, 'pengaduan'])->name('kehadiran.pengaduan');
-    Route::get('/kehadiran/rekapitulasi', [App\Http\Controllers\Admin\KehadiranController::class, 'rekapitulasi'])->name('kehadiran.rekapitulasi');
-    Route::get('/kehadiran/jam-kerja', [App\Http\Controllers\Admin\KehadiranController::class, 'jamKerja'])->name('kehadiran.jam-kerja');
-    Route::get('/kehadiran/alasan-keluar', [App\Http\Controllers\Admin\KehadiranController::class, 'alasanKeluar'])->name('kehadiran.alasan-keluar');
+    // Routes untuk Pegawai
+    Route::resource('pegawai', PegawaiController::class);
+
+    // Routes untuk Jenis Kehadiran
+    Route::resource('jenis-kehadiran', JenisKehadiranController::class)->except(['show']);
+
+    // Routes untuk Kehadiran Harian
+    Route::resource('kehadiran-harian', KehadiranHarianController::class);
+
+    // Routes untuk Jam Kerja
+    Route::resource('jam-kerja', JamKerjaController::class);
+
+    // Routes untuk Keterangan
+    Route::resource('keterangan', KeteranganController::class);
+
+    // Routes untuk Dinas Luar
+    Route::resource('dinas-luar', DinasLuarController::class);
+
+    // Routes untuk Kehadiran Bulanan
+    Route::get('kehadiran/rekap', [KehadiranBulananController::class, 'rekap'])->name('kehadiran.rekap');
+    Route::resource('kehadiran-bulanan', KehadiranBulananController::class);
+
+    // Routes untuk Kehadiran Tahunan
+    Route::resource('kehadiran-tahunan', KehadiranTahunanController::class);
 
     /*
     |--------------------------------------------------------------------------
@@ -418,26 +475,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     Route::get('/pengguna/{user}/edit', [App\Http\Controllers\Admin\PenggunaController::class, 'edit'])->name('pengguna.edit');
     Route::put('/pengguna/{user}', [App\Http\Controllers\Admin\PenggunaController::class, 'update'])->name('pengguna.update');
     Route::delete('/pengguna/{user}', [App\Http\Controllers\Admin\PenggunaController::class, 'destroy'])->name('pengguna.destroy');
-
-    /*
-    |--------------------------------------------------------------------------
-    | IDENTITAS DESA
-    |--------------------------------------------------------------------------
-    */
-    Route::get(
-        '/identitas-desa',
-        [App\Http\Controllers\Admin\IdentitasDesaController::class, 'index']
-    )->name('identitas-desa.index');
-
-    Route::get(
-        '/identitas-desa/edit',
-        [App\Http\Controllers\Admin\IdentitasDesaController::class, 'edit']
-    )->name('identitas-desa.edit');
-
-    Route::put(
-        '/identitas-desa',
-        [App\Http\Controllers\Admin\IdentitasDesaController::class, 'update']
-    )->name('identitas-desa.update');
 
     /*
     |--------------------------------------------------------------------------
