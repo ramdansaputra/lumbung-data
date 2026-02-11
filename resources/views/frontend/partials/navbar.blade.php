@@ -30,7 +30,6 @@
 
         <div class="hidden lg:flex gap-6 text-sm font-semibold text-slate-700">
             <a href="{{ url('/') }}">Beranda</a>
-
             <a href="#">Profil Desa</a>
             <a href="#">Pemerintahan</a>
             <a href="#">Data Desa</a>
@@ -40,8 +39,7 @@
             <a href="#">Layanan</a>
         </div>
 
-        <a href="{{ url('/admin/dashboard') }}"
-            class="px-5 py-2 rounded-full bg-emerald-600 text-white text-sm">
+        <a href="{{ url('/admin/dashboard') }}" class="px-5 py-2 rounded-full bg-emerald-600 text-white text-sm">
             Login Admin
         </a>
     </div>
