@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\HariLibur;
+use App\Models\PengaduanKehadiran;
+use App\Models\JamKerja;
+use App\Models\ShiftKerja;
+use App\Models\AlasanKeluar;
 
 class KehadiranController extends Controller
 {
@@ -12,7 +17,8 @@ class KehadiranController extends Controller
      */
     public function hariLibur()
     {
-        return view('admin.kehadiran.hari-libur');
+        $hariLibur = HariLibur::orderBy('tanggal', 'asc')->get();
+        return view('admin.kehadiran.hari-libur', compact('hariLibur'));
     }
 
     /**
@@ -63,8 +69,7 @@ class KehadiranController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        // TODO: Simpan data hari libur
-        // Example: HariLibur::create($validated);
+        HariLibur::create($validated);
 
         return redirect()->route('admin.kehadiran.hari-libur')
             ->with('success', 'Hari libur berhasil ditambahkan');
@@ -82,8 +87,7 @@ class KehadiranController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        // TODO: Update data hari libur
-        // Example: HariLibur::findOrFail($id)->update($validated);
+        HariLibur::findOrFail($id)->update($validated);
 
         return redirect()->route('admin.kehadiran.hari-libur')
             ->with('success', 'Hari libur berhasil diperbarui');
@@ -94,8 +98,7 @@ class KehadiranController extends Controller
      */
     public function destroyHariLibur($id)
     {
-        // TODO: Hapus data hari libur
-        // Example: HariLibur::findOrFail($id)->delete();
+        HariLibur::findOrFail($id)->delete();
 
         return redirect()->route('admin.kehadiran.hari-libur')
             ->with('success', 'Hari libur berhasil dihapus');

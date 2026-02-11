@@ -10,12 +10,19 @@
     </div>
 
     <!-- Statistics Cards -->
+    @php
+        $totalBalita = $data->total();
+        $normalCount = $data->where('status_stunting', 'normal')->count();
+        $stuntingCount = $data->where('status_stunting', 'stunting')->count();
+        $risikoStuntingCount = $data->where('status_stunting', 'risiko_stunting')->count();
+        $giziBurukCount = $data->where('status_gizi', 'kurang')->count();
+    @endphp
     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Total Balita</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">543</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $totalBalita }}</p>
                 </div>
                 <div class="bg-blue-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,8 +36,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Normal</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1">412</p>
-                    <p class="text-xs text-gray-500">75.9%</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $normalCount }}</p>
+                    <p class="text-xs text-gray-500">{{ $totalBalita > 0 ? round(($normalCount / $totalBalita) * 100, 1) : 0 }}%</p>
                 </div>
                 <div class="bg-green-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,8 +51,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Stunting</p>
-                    <p class="text-2xl font-bold text-red-600 mt-1">87</p>
-                    <p class="text-xs text-gray-500">16.0%</p>
+                    <p class="text-2xl font-bold text-red-600 mt-1">{{ $stuntingCount }}</p>
+                    <p class="text-xs text-gray-500">{{ $totalBalita > 0 ? round(($stuntingCount / $totalBalita) * 100, 1) : 0 }}%</p>
                 </div>
                 <div class="bg-red-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,9 +65,9 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Resiko Stunting</p>
-                    <p class="text-2xl font-bold text-yellow-600 mt-1">44</p>
-                    <p class="text-xs text-gray-500">8.1%</p>
+                    <p class="text-sm text-gray-600">Risiko Stunting</p>
+                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $risikoStuntingCount }}</p>
+                    <p class="text-xs text-gray-500">{{ $totalBalita > 0 ? round(($risikoStuntingCount / $totalBalita) * 100, 1) : 0 }}%</p>
                 </div>
                 <div class="bg-yellow-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,8 +81,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Gizi Buruk</p>
-                    <p class="text-2xl font-bold text-orange-600 mt-1">0</p>
-                    <p class="text-xs text-gray-500">0.0%</p>
+                    <p class="text-2xl font-bold text-orange-600 mt-1">{{ $giziBurukCount }}</p>
+                    <p class="text-xs text-gray-500">{{ $totalBalita > 0 ? round(($giziBurukCount / $totalBalita) * 100, 1) : 0 }}%</p>
                 </div>
                 <div class="bg-orange-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,22 +201,37 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($data as $index => $item)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890001</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $data->firstItem() + $index }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->penduduk->nik ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Zahra Alifah</div>
-                            <div class="text-sm text-gray-500">24 bulan</div>
+                            <div class="text-sm font-medium text-gray-900">{{ $item->penduduk->nama ?? '-' }}</div>
+                            <div class="text-sm text-gray-500">{{ $item->penduduk->tanggal_lahir ? \Carbon\Carbon::parse($item->penduduk->tanggal_lahir)->diffInMonths() : 0 }} bulan</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">31 Jan 2024</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">P</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">11.5</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">84</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">47</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->penduduk->tanggal_lahir ? \Carbon\Carbon::parse($item->penduduk->tanggal_lahir)->format('d M Y') : '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->penduduk->jenis_kelamin ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->berat_badan ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->tinggi_badan ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Normal
-                            </span>
+                            @if($item->status_stunting == 'normal')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Normal
+                                </span>
+                            @elseif($item->status_stunting == 'stunting')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Stunting
+                                </span>
+                            @elseif($item->status_stunting == 'risiko_stunting')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Risiko Stunting
+                                </span>
+                            @else
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    -
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex gap-2">
@@ -219,56 +241,13 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890002</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Ahmad Raffi</div>
-                            <div class="text-sm text-gray-500">36 bulan</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">31 Jan 2023</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">L</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">12.8</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">88</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">48</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                Stunting
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-green-600 hover:text-green-900">Ukur</button>
-                            </div>
+                    @empty
+                    <tr>
+                        <td colspan="10" class="px-6 py-4 text-center text-gray-500">
+                            Tidak ada data stunting ditemukan.
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890003</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Siti Nurhaliza</div>
-                            <div class="text-sm text-gray-500">18 bulan</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">31 Jul 2024</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">P</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">9.8</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">77</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                Resiko Stunting
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-green-600 hover:text-green-900">Ukur</button>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

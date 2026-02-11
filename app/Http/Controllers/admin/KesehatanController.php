@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PendataanKesehatan;
+use App\Models\PemantauanKesehatan;
+use App\Models\Vaksin;
+use App\Models\Stunting;
+use App\Models\Penduduk;
 use Illuminate\Http\Request;
 
 class KesehatanController extends Controller
@@ -12,7 +17,18 @@ class KesehatanController extends Controller
      */
     public function pendataan()
     {
-        return view('admin.kesehatan.pendataan');
+        $data = PendataanKesehatan::with('penduduk')->paginate(10);
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.pendataan', compact('data', 'penduduk'));
+    }
+
+    /**
+     * Show create form
+     */
+    public function createPendataan()
+    {
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.pendataan-create', compact('penduduk'));
     }
 
     /**
@@ -20,7 +36,9 @@ class KesehatanController extends Controller
      */
     public function pemantauan()
     {
-        return view('admin.kesehatan.pemantauan');
+        $data = PemantauanKesehatan::with('penduduk')->paginate(10);
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.pemantauan', compact('data', 'penduduk'));
     }
 
     /**
@@ -28,7 +46,9 @@ class KesehatanController extends Controller
      */
     public function vaksin()
     {
-        return view('admin.kesehatan.vaksin');
+        $data = Vaksin::with('penduduk')->paginate(10);
+        $penduduk = Penduduk::select('id', 'nama', 'nik')->get();
+        return view('admin.kesehatan.vaksin', compact('data', 'penduduk'));
     }
 
     /**
@@ -36,7 +56,9 @@ class KesehatanController extends Controller
      */
     public function stunting()
     {
-        return view('admin.kesehatan.stunting');
+        $data = PemantauanKesehatan::with('penduduk')->whereNotNull('status_stunting')->paginate(10);
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.stunting', compact('data', 'penduduk'));
     }
 
     // ============================================
@@ -48,21 +70,38 @@ class KesehatanController extends Controller
      */
     public function storePendataan(Request $request)
     {
-        // Validasi data
-        $validated = $request->validate([
-            'nik' => 'required|string|max:16',
-            'nama_lengkap' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:L,P',
-            'kelurahan' => 'required|string',
-            'status_kesehatan' => 'required|string',
-        ]);
+        try {
+            // Validasi data
+            $validated = $request->validate([
+                'penduduk_id' => 'required|exists:penduduk,id',
+                'tanggal' => 'required|date',
+                'jenis_pemeriksaan' => 'required|string',
+                'berat_badan' => 'nullable|numeric|min:0',
+                'tinggi_badan' => 'nullable|numeric|min:0',
+                'tekanan_darah' => 'nullable|string',
+                'status_gizi' => 'nullable|in:normal,kurang,lebih,obesitas',
+                'keterangan' => 'nullable|string',
+                'kelurahan' => 'nullable|string',
+            ]);
 
-        // TODO: Simpan data ke database
-        // Example: Pendataan::create($validated);
+            PendataanKesehatan::create($validated);
 
-        return redirect()->route('admin.kesehatan.pendataan')
-            ->with('success', 'Data kesehatan berhasil ditambahkan');
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Data kesehatan berhasil ditambahkan']);
+            }
+
+            return redirect()->route('admin.kesehatan.pendataan')
+                ->with('success', 'Data kesehatan berhasil ditambahkan');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -72,19 +111,40 @@ class KesehatanController extends Controller
     {
         // Validasi data
         $validated = $request->validate([
-            'nik' => 'required|string|max:16',
-            'nama_lengkap' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:L,P',
-            'kelurahan' => 'required|string',
-            'status_kesehatan' => 'required|string',
+            'penduduk_id' => 'required|exists:penduduk,id',
+            'tanggal' => 'required|date',
+            'jenis_pemeriksaan' => 'required|string',
+            'berat_badan' => 'nullable|numeric|min:0',
+            'tinggi_badan' => 'nullable|numeric|min:0',
+            'tekanan_darah' => 'nullable|string',
+            'status_gizi' => 'nullable|in:normal,kurang,lebih,obesitas',
+            'keterangan' => 'nullable|string',
+            'kelurahan' => 'nullable|string',
         ]);
 
-        // TODO: Update data di database
-        // Example: Pendataan::findOrFail($id)->update($validated);
+        PendataanKesehatan::findOrFail($id)->update($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data kesehatan berhasil diperbarui']);
+        }
 
         return redirect()->route('admin.kesehatan.pendataan')
             ->with('success', 'Data kesehatan berhasil diperbarui');
+    }
+
+    /**
+     * Show edit form or return JSON for AJAX
+     */
+    public function editPendataan(Request $request, $id)
+    {
+        $data = PendataanKesehatan::findOrFail($id);
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+
+        if ($request->expectsJson()) {
+            return response()->json($data->load('penduduk'));
+        }
+
+        return view('admin.kesehatan.pendataan-edit', compact('data', 'penduduk'));
     }
 
     /**
@@ -92,8 +152,7 @@ class KesehatanController extends Controller
      */
     public function destroyPendataan($id)
     {
-        // TODO: Hapus data dari database
-        // Example: Pendataan::findOrFail($id)->delete();
+        PendataanKesehatan::findOrFail($id)->delete();
 
         return redirect()->route('admin.kesehatan.pendataan')
             ->with('success', 'Data kesehatan berhasil dihapus');
@@ -104,24 +163,46 @@ class KesehatanController extends Controller
     // ============================================
 
     /**
+     * Show create form for pemantauan
+     */
+    public function createPemantauan()
+    {
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.pemantauan-create', compact('penduduk'));
+    }
+
+    /**
      * Store new monitoring data
      */
     public function storePemantauan(Request $request)
     {
         $validated = $request->validate([
-            'nama_pasien' => 'required|string|max:255',
+            'penduduk_id' => 'required|exists:penduduk,id',
+            'tanggal' => 'required|date',
+            'nama_pasien' => 'required|string',
             'jenis_pemantauan' => 'required|string',
             'tanggal_mulai' => 'required|date',
             'frekuensi' => 'required|string',
             'petugas' => 'required|string',
-            'status' => 'required|in:aktif,tindak_lanjut,selesai',
+            'status' => 'required|in:aktif,selesai,ditunda',
+            'catatan' => 'nullable|string',
+            'status_stunting' => 'nullable|in:normal,stunting,risiko_stunting',
         ]);
 
-        // TODO: Simpan data pemantauan
-        // Example: Pemantauan::create($validated);
+        PemantauanKesehatan::create($validated);
 
         return redirect()->route('admin.kesehatan.pemantauan')
             ->with('success', 'Data pemantauan berhasil ditambahkan');
+    }
+
+    /**
+     * Show edit form for pemantauan
+     */
+    public function editPemantauan($id)
+    {
+        $data = PemantauanKesehatan::findOrFail($id);
+        $penduduk = Penduduk::select('id', 'nama', 'nik', 'tanggal_lahir')->get();
+        return view('admin.kesehatan.pemantauan-edit', compact('data', 'penduduk'));
     }
 
     /**
@@ -130,19 +211,31 @@ class KesehatanController extends Controller
     public function updatePemantauan(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama_pasien' => 'required|string|max:255',
-            'jenis_pemantauan' => 'required|string',
-            'tanggal_mulai' => 'required|date',
-            'frekuensi' => 'required|string',
-            'petugas' => 'required|string',
-            'status' => 'required|in:aktif,tindak_lanjut,selesai',
+            'penduduk_id' => 'required|exists:penduduk,id',
+            'tanggal' => 'required|date',
+            'jenis_pemeriksaan' => 'required|string',
+            'berat_badan' => 'nullable|numeric|min:0',
+            'tinggi_badan' => 'nullable|numeric|min:0',
+            'status_gizi' => 'nullable|in:normal,kurang,lebih,obesitas',
+            'status_stunting' => 'nullable|in:normal,stunting,risiko_stunting',
+            'keterangan' => 'nullable|string',
         ]);
 
-        // TODO: Update data pemantauan
-        // Example: Pemantauan::findOrFail($id)->update($validated);
+        PemantauanKesehatan::findOrFail($id)->update($validated);
 
         return redirect()->route('admin.kesehatan.pemantauan')
             ->with('success', 'Data pemantauan berhasil diperbarui');
+    }
+
+    /**
+     * Delete monitoring data
+     */
+    public function destroyPemantauan($id)
+    {
+        PemantauanKesehatan::findOrFail($id)->delete();
+
+        return redirect()->route('admin.kesehatan.pemantauan')
+            ->with('success', 'Data pemantauan berhasil dihapus');
     }
 
     /**
@@ -238,21 +331,19 @@ class KesehatanController extends Controller
     public function storeStunting(Request $request)
     {
         $validated = $request->validate([
-            'nik' => 'required|string|max:16',
-            'nama_balita' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:L,P',
-            'berat_badan' => 'required|numeric|min:0',
-            'tinggi_badan' => 'required|numeric|min:0',
-            'lingkar_kepala' => 'required|numeric|min:0',
-            'status_gizi' => 'required|in:normal,stunting,resiko,gizi_buruk',
+            'penduduk_id' => 'required|exists:penduduk,id',
+            'tanggal' => 'required|date',
+            'berat_badan' => 'nullable|numeric|min:0',
+            'tinggi_badan' => 'nullable|numeric|min:0',
+            'lingkar_kepala' => 'nullable|numeric|min:0',
+            'status_stunting' => 'nullable|in:normal,stunting,risiko_stunting',
+            'keterangan' => 'nullable|string',
         ]);
 
-        // TODO: Simpan data stunting dan hitung status gizi
-        // Example: Stunting::create($validated);
+        Stunting::create($validated);
 
         return redirect()->route('admin.kesehatan.stunting')
-            ->with('success', 'Data balita berhasil ditambahkan');
+            ->with('success', 'Data stunting berhasil ditambahkan');
     }
 
     /**

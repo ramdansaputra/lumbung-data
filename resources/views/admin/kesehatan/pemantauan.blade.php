@@ -15,7 +15,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Total Pemantauan</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">152</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $data->total() }}</p>
                 </div>
                 <div class="bg-blue-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,8 +28,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Aktif Bulan Ini</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">38</p>
+                    <p class="text-sm text-gray-600">Normal</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $data->where('status_gizi', 'normal')->count() }}</p>
                 </div>
                 <div class="bg-green-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Perlu Tindak Lanjut</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">12</p>
+                    <p class="text-sm text-gray-600">Perlu Perhatian</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $data->whereIn('status_gizi', ['kurang', 'obesitas'])->count() }}</p>
                 </div>
                 <div class="bg-yellow-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,12 +56,12 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Selesai</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">102</p>
+                    <p class="text-sm text-gray-600">Risiko Stunting</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $data->where('status_stunting', 'risiko_stunting')->count() }}</p>
                 </div>
-                <div class="bg-purple-100 rounded-full p-3">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <div class="bg-red-100 rounded-full p-3">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
             </div>
@@ -111,12 +111,12 @@
     <!-- Action Buttons -->
     <div class="flex justify-between items-center mb-4">
         <div>
-            <button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 flex items-center gap-2">
+            <a href="{{ route('admin.kesehatan.pemantauan.create') }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Tambah Pemantauan
-            </button>
+            </a>
         </div>
         <div class="flex gap-2">
             <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-200 flex items-center gap-2">
@@ -145,75 +145,55 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($data as $index => $item)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $data->firstItem() + $index }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Budi Santoso</div>
-                            <div class="text-sm text-gray-500">L, 55 Tahun</div>
+                            <div class="text-sm font-medium text-gray-900">{{ $item->penduduk->nama ?? '-' }}</div>
+                            <div class="text-sm text-gray-500">{{ $item->penduduk->jenis_kelamin ?? '-' }}, {{ $item->penduduk->tanggal_lahir ? \Carbon\Carbon::parse($item->penduduk->tanggal_lahir)->age : '-' }} Tahun</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Hipertensi</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01 Jan 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mingguan</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">dr. Ahmad</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->jenis_pemeriksaan }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d M Y') : '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Aktif
-                            </span>
+                            @if($item->status_gizi == 'normal')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Normal
+                                </span>
+                            @elseif(in_array($item->status_gizi, ['kurang', 'obesitas']))
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Perlu Perhatian
+                                </span>
+                            @elseif($item->status_stunting == 'risiko_stunting')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Risiko Stunting
+                                </span>
+                            @else
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    -
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-green-600 hover:text-green-900">Rekam</button>
+                                <button onclick="detailModal({{ $item->id }})" class="text-blue-600 hover:text-blue-900">Detail</button>
+                                <button onclick="editModal({{ $item->id }})" class="text-yellow-600 hover:text-yellow-900">Edit</button>
+                                <form method="POST" action="{{ route('admin.kesehatan.pemantauan.destroy', $item->id) }}" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')" class="text-red-600 hover:text-red-900">Hapus</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Siti Nurhaliza</div>
-                            <div class="text-sm text-gray-500">P, 48 Tahun</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Diabetes</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Jan 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2 Minggu Sekali</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">dr. Sari</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                Tindak Lanjut
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-green-600 hover:text-green-900">Rekam</button>
-                            </div>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                            Belum ada data pemantauan kesehatan yang tercatat
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Ahmad Yani</div>
-                            <div class="text-sm text-gray-500">L, 42 Tahun</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">TBC</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Des 2025</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Harian</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">dr. Budi</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                Selesai
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-gray-400 cursor-not-allowed">Edit</button>
-                                <button class="text-gray-400 cursor-not-allowed">Rekam</button>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

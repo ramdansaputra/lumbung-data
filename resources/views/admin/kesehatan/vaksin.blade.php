@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Data Vaksinasi')
+@section('title', 'Data Pemantauan Kesehatan')
 
 @section('content')
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Data Vaksinasi</h1>
-        <p class="text-gray-600 mt-1">Kelola data vaksinasi masyarakat</p>
+        <h1 class="text-2xl font-bold text-gray-800">Data Pemantauan Kesehatan</h1>
+        <p class="text-gray-600 mt-1">Kelola data pemantauan kesehatan masyarakat</p>
     </div>
 
     <!-- Statistics Cards -->
@@ -13,8 +13,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Total Vaksinasi</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">2,847</p>
+                    <p class="text-sm text-gray-600">Total Pemantauan</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $data->total() }}</p>
                 </div>
                 <div class="bg-blue-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,7 +28,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Bulan Ini</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">187</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ \App\Models\Vaksin::where('tanggal_mulai', '>=', now()->startOfMonth())->count() }}</p>
                 </div>
                 <div class="bg-green-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,8 +41,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Vaksin Lengkap</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">1,523</p>
+                    <p class="text-sm text-gray-600">Aktif</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ \App\Models\Vaksin::where('status', 'aktif')->count() }}</p>
                 </div>
                 <div class="bg-purple-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,8 +55,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Belum Lengkap</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">1,324</p>
+                    <p class="text-sm text-gray-600">Selesai</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ \App\Models\Vaksin::where('status', 'selesai')->count() }}</p>
                 </div>
                 <div class="bg-yellow-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,34 +72,31 @@
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
-                <input type="text" placeholder="Cari nama, NIK..." 
+                <input type="text" placeholder="Cari nama, NIK..."
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Vaksin</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pemeriksaan</label>
                 <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">Semua Vaksin</option>
-                    <option value="covid19">COVID-19</option>
-                    <option value="campak">Campak</option>
-                    <option value="polio">Polio</option>
-                    <option value="bcg">BCG</option>
-                    <option value="dpt">DPT</option>
-                    <option value="hepatitis">Hepatitis B</option>
-                    <option value="mr">MR</option>
+                    <option value="">Semua Pemeriksaan</option>
+                    <option value="rutin">Pemeriksaan Rutin</option>
+                    <option value="khusus">Pemeriksaan Khusus</option>
+                    <option value="darurat">Pemeriksaan Darurat</option>
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status Vaksinasi</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status Gizi</label>
                 <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Semua Status</option>
-                    <option value="lengkap">Lengkap</option>
-                    <option value="belum_lengkap">Belum Lengkap</option>
-                    <option value="booster">Booster</option>
+                    <option value="normal">Normal</option>
+                    <option value="kurang">Kurang</option>
+                    <option value="lebih">Lebih</option>
+                    <option value="obesitas">Obesitas</option>
                 </select>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
-                <input type="month" 
+                <input type="month"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div class="flex items-end">
@@ -115,7 +112,7 @@
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8">
                 <button class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                    Semua Vaksinasi
+                    Semua Pemantauan
                 </button>
                 <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     Anak (0-5 Tahun)
@@ -137,7 +134,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Tambah Data Vaksinasi
+                Tambah Data Pemantauan
             </button>
         </div>
         <div class="flex gap-2">
@@ -151,7 +148,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
-                Cetak Kartu Vaksin
+                Cetak Laporan
             </button>
         </div>
     </div>
@@ -166,86 +163,52 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usia</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Vaksin</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosis</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Vaksinasi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Pemantauan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frekuensi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Petugas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Mulai</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890001</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Andi Wijaya</div>
-                            <div class="text-sm text-gray-500">L</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">28 Tahun</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">COVID-19</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dosis 3 (Booster)</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Jan 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Lengkap
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-purple-600 hover:text-purple-900">Kartu</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890002</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Dewi Kusuma</div>
-                            <div class="text-sm text-gray-500">P</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 Tahun</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">DPT</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dosis 2 dari 3</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20 Jan 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                Belum Lengkap
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-purple-600 hover:text-purple-900">Kartu</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3301234567890003</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Rudi Hartono</div>
-                            <div class="text-sm text-gray-500">L</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Tahun</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">COVID-19</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dosis 2 dari 2</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Jan 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Lengkap
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-2">
-                                <button class="text-blue-600 hover:text-blue-900">Detail</button>
-                                <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
-                                <button class="text-purple-600 hover:text-purple-900">Kartu</button>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse($data as $index => $item)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $data->firstItem() + $index }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->penduduk->nik ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $item->nama_pasien ?? $item->penduduk->nama ?? '-' }}</div>
+                                <div class="text-sm text-gray-500">{{ $item->penduduk->jenis_kelamin == 'L' ? 'L' : 'P' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->penduduk->tanggal_lahir ? \Carbon\Carbon::parse($item->penduduk->tanggal_lahir)->age : '-' }} Tahun</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->jenis_pemantauan ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->frekuensi ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->petugas ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($item->status == 'aktif')
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                @elseif($item->status == 'selesai')
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Selesai</span>
+                                @elseif($item->status == 'dihentikan')
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dihentikan</span>
+                                @else
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->tanggal_mulai ? \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y') : '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex gap-2">
+                                    <button class="text-blue-600 hover:text-blue-900">Detail</button>
+                                    <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-900">Cetak</button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">Tidak ada data pemantauan kesehatan</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

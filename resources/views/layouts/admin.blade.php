@@ -190,9 +190,15 @@
                 kependudukan: {{ request()->is('admin/penduduk*') || request()->is('admin/keluarga*') || request()->is('admin/rumah-tangga*') || request()->is('admin/kelompok*') || request()->is('admin/data-suplemen*') || request()->is('admin/calon-pemilih*') ? 'true' : 'false' }},
                 statistik: {{ request()->is('admin/statistik*') ? 'true' : 'false' }},
                 kesehatan: {{ request()->is('admin/kesehatan*') ? 'true' : 'false' }},
-                kehadiran: {{ request()->is('admin/kehadiran*') ? 'true' : 'false' }},
+                kehadiran: {{ request()->is('admin/pegawai*') || request()->is('admin/jenis-kehadiran*') ||
+                request()->is('admin/kehadiran-harian*') || request()->is('admin/jam-kerja*') || request()->is('admin/keterangan*') ||
+                request()->is('admin/dinas-luar*') || request()->is('admin/kehadiran-bulanan*') ||
+                request()->is('admin/kehadiran-tahunan*') || request()->routeIs('kehadiran.rekap') ? 'true' : 'false' }},
                 layananSurat: {{ request()->is('admin/layanan-surat*') ? 'true' : 'false' }},
                 sekretariat: {{ request()->is('admin/sekretariat*') ? 'true' : 'false' }},
+                informasiPublik: {{ request()->is('admin/sekretariat/informasi-publik*') ? 'true' : 'false' }},
+                inventaris: {{ request()->is('admin/sekretariat/inventaris*') ? 'true' : 'false' }},
+                klasifikasiSurat: {{ request()->is('admin/sekretariat/klasifikasi-surat*') ? 'true' : 'false' }},
                 suratDinas: {{ request()->is('admin/surat-dinas*') ? 'true' : 'false' }},
                 bukuAdministrasi: {{ request()->is('admin/buku-administrasi*') ? 'true' : 'false' }},
                 keuangan: {{ request()->is('admin/keuangan*') ? 'true' : 'false' }},
@@ -436,44 +442,51 @@
                             class="menu-header w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/10"
                             :class="{ 'open': kehadiran }">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                                 </svg>
                                 <span class="menu-text whitespace-nowrap">Kehadiran</span>
                             </div>
-                            <svg class="w-4 h-4 chevron flex-shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
+                            <svg class="w-4 h-4 chevron flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                         <div class="submenu mt-1 ml-4 space-y-1" :class="{ 'open': kehadiran }">
-                            <a href="/admin/kehadiran/hari-libur"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran.hari-libur') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="{{ route('admin.pegawai.index') }}" @click="kehadiran = false"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.pegawai.*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
-                                <span class="menu-text whitespace-nowrap">Hari Libur</span>
+                                <span class="menu-text whitespace-nowrap">Data Pegawai</span>
                             </a>
-                            <a href="/admin/kehadiran/pengaduan"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran.pengaduan') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="{{ route('admin.jenis-kehadiran.index') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.jenis-kehadiran.*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
-                                <span class="menu-text whitespace-nowrap">Pengaduan</span>
+                                <span class="menu-text whitespace-nowrap">Jenis Kehadiran</span>
                             </a>
-                            <a href="/admin/kehadiran/rekapitulasi"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran.rekapitulasi') ? 'bg-white/15 text-white' : '' }}">
-                                <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
-                                <span class="menu-text whitespace-nowrap">Rekapitulasi</span>
-                            </a>
-                            <a href="/admin/kehadiran/jam-kerja"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran.jam-kerja') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="{{ route('admin.jam-kerja.index') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.jam-kerja.*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Jam Kerja</span>
                             </a>
-                            <a href="/admin/kehadiran/alasan-keluar"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran.alasan-keluar') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="{{ route('admin.kehadiran-harian.index') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kehadiran-harian.*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
-                                <span class="menu-text whitespace-nowrap">Alasan Keluar</span>
+                                <span class="menu-text whitespace-nowrap">Kehadiran Harian</span>
+                            </a>
+                            <a href="{{ route('admin.keterangan.index') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.keterangan.*') ? 'bg-white/15 text-white' : '' }}">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
+                                <span class="menu-text whitespace-nowrap">Izin & Cuti</span>
+                            </a>
+                            <a href="{{ route('admin.dinas-luar.index') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.dinas-luar.*') ? 'bg-white/15 text-white' : '' }}">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
+                                <span class="menu-text whitespace-nowrap">Dinas Luar</span>
+                            </a>
+                            <a href="{{ route('admin.kehadiran.rekap') }}"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('kehadiran.rekap') ? 'bg-white/15 text-white' : '' }}">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
+                                <span class="menu-text whitespace-nowrap">Rekapitulasi </span>
                             </a>
                         </div>
                     </div>
@@ -547,7 +560,7 @@
                         </button>
                         <div class="submenu mt-1 ml-4 space-y-1" :class="{ 'open': sekretariat }">
                             <a href="/admin/sekretariat/informasi-publik"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.sekretariat.informasi-publik') ? 'bg-white/15 text-white' : '' }}">
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.sekretariat.informasi-publik.index') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Informasi Publik</span>
                             </a>
@@ -912,6 +925,9 @@
                     <div class="text-right">
                         <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->role }}</p>
+                        <a href="{{ route('admin.account.setting') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">
+                            Pengaturan Akun
+                        </a>
                     </div>
                     <div
                         class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">
