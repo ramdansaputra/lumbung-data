@@ -47,13 +47,33 @@ Route::get('/program', function () {
 // PROFIL DESA
 Route::get('/profil', [App\Http\Controllers\FrontendController::class, 'profil'])->name('profil');
 
+// DATA DESA
+Route::get('/data-desa', [FrontendController::class, 'dataDesa'])
+    ->name('data-desa');
+
+// ARTIKEL
+Route::get('/artikel', [FrontendController::class, 'berita'])->name('artikel');
+
 // WILAYAH ADMINISTRATIF
 Route::get('/wilayah', [App\Http\Controllers\FrontendController::class, 'wilayah'])->name('wilayah');
 
+Route::get('/wilayah/{id}', [FrontendController::class, 'wilayahShow'])
+    ->name('wilayah.show');
+
+// PROFIL KEPALA DESA
+Route::get('/profil/kepala-desa', [FrontendController::class, 'profilKepalaDesa'])
+    ->name('profil-kepala-desa');
+
 // KONTAK
-Route::get('/kontak', function () {
-    return view('frontend.kontak');
-})->name('kontak');
+Route::get('/kontak', [FrontendController::class, 'kontak'])
+    ->name('kontak');
+
+Route::post('/kontak', [FrontendController::class, 'storeKontak'])
+    ->name('kontak.store');
+
+
+Route::get('/pemerintahan', [FrontendController::class, 'pemerintahan'])
+    ->name('pemerintahan');
 
 // LOGIN
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLogin'])->name('login');

@@ -1,0 +1,121 @@
+
+CONTROLLER WAJIB:
+Generate otomatis:
+
+app/Http/Controllers/Frontend/
+
+HomeController
+ProfilController
+PemerintahanController
+WilayahController
+ArtikelController
+DataDesaController
+
+Setiap controller:
+
+* ambil data dari tabel sesuai SQL
+* kirim variable ke blade
+
+---
+
+ROUTE WAJIB:
+Generate otomatis di:
+
+routes/web.php
+
+gunakan prefix:
+Route::prefix('/')->group(function()
+
+---
+
+SECURITY RULE:
+
+* escape output blade {{ }}
+* gunakan pagination untuk tabel besar
+* hindari query berulang
+* gunakan eager loading jika diperlukan
+
+---
+
+OUTPUT WAJIB:
+Setiap kali menghasilkan halaman:
+
+WAJIB tampilkan berurutan:
+
+1. Route
+2. Controller
+3. Blade View
+4. Component yang dipakai
+
+Semua code siap copy paste.
+
+---
+
+SCALABILITY RULE:
+Struktur harus siap scaling multi-desa:
+
+* tidak hardcode nama desa
+* gunakan data dari tabel identitas_desa
+* gunakan config global desa
+
+---
+
+MAINTENANCE RULE:
+
+* code harus clean dan readable
+* komentar singkat pada bagian penting
+* gunakan naming konsisten
+* hindari logic kompleks di blade
+* logic ditempatkan di controller
+
+---
+
+UI CONSISTENCY RULE:
+
+* spacing konsisten
+* padding section konsisten
+* card design konsisten
+* table style konsisten
+* button style konsisten
+
+---
+
+IMPORTANT:
+Jika informasi pada SQL kurang:
+
+* Anda boleh membuat asumsi struktur standar website desa
+* tetapi tetap beri catatan bagian asumsi
+
+---
+
+START WORKFLOW:
+Langkah kerja:
+
+Step 1
+Baca SQL dan tampilkan mapping tabel → halaman
+
+Step 2
+Generate layout system + component system
+
+Step 3
+Generate route otomatis
+
+Step 4
+Generate controller otomatis
+
+Step 5
+Generate seluruh halaman blade siap pakai
+
+Step 6
+Optimasi responsive + consistency
+
+---
+
+GOAL:
+Menghasilkan frontend Laravel production-ready yang:
+
+* scalable
+* clean
+* reusable
+* mudah dipahami pemula
+* siap dikembangkan backend admin panel di tahap berikutnya
