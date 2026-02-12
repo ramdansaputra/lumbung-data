@@ -3,11 +3,11 @@
 @section('title', 'Data Jam Kerja')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-7xl mx-auto space-y-6">
         <!-- Header Section with Stats -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,15 +29,15 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Data Jam Kerja</h1>
-                            <p class="text-blue-100 text-sm font-medium">Kelola jadwal jam kerja pegawai dengan sistem
+                            <p class="text-teal-100 text-sm font-medium">Kelola jadwal jam kerja pegawai dengan sistem
                                 modern
                             </p>
                         </div>
                     </div>
                     <a href="{{ route('admin.jam-kerja.create') }}"
-                        class="group relative inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-6 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="group relative inline-flex items-center justify-center gap-2 bg-white text-emerald-600 px-6 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                         <div
-                            class="absolute inset-0 bg-gradient-to-r from-white to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            class="absolute inset-0 bg-gradient-to-r from-white to-teal-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         </div>
                         <svg class="relative w-5 h-5 group-hover:rotate-90 transition-transform duration-500"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,11 +55,11 @@
                 <div
                     class="group relative bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div
-                        class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     </div>
                     <div class="relative flex items-center gap-4">
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-xl group-hover:shadow-indigo-500/40 transition-all duration-300">
+                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-xl group-hover:shadow-emerald-500/40 transition-all duration-300">
                             <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -160,10 +160,10 @@
                     <tbody class="divide-y divide-slate-100">
                         @forelse($jamKerja as $index => $item)
                         <tr
-                            class="group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-blue-50/50 transition-all duration-200">
+                            class="group hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-teal-50/50 transition-all duration-200">
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <span
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-sm font-bold text-slate-700 group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
+                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-sm font-bold text-slate-700 group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
                                     {{ $jamKerja->firstItem() + $index }}
                                 </span>
                             </td>
@@ -171,10 +171,10 @@
                                 <div class="flex items-center gap-3">
                                     <div class="relative group/avatar">
                                         <div
-                                            class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
+                                            class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
                                         </div>
                                         <div
-                                            class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                            class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                             {{ strtoupper(substr($item->hari, 0, 2)) }}
                                         </div>
                                     </div>
@@ -194,7 +194,7 @@
                             </td>
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-200/50 shadow-sm">
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-teal-100 to-teal-100 text-teal-700 border border-teal-200/50 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
@@ -266,9 +266,9 @@
                                     <p class="text-sm text-slate-500 mb-8 max-w-md">Mulai tambahkan jadwal jam kerja
                                         untuk mengatur waktu kerja pegawai</p>
                                     <a href="{{ route('admin.jam-kerja.create') }}"
-                                        class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                                        class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-teal-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
                                         <div
-                                            class="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            class="absolute inset-0 bg-gradient-to-r from-emerald-700 via-teal-700 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity">
                                         </div>
                                         <svg class="relative w-6 h-6 group-hover:rotate-90 transition-transform duration-500"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,11 +3,11 @@
 @section('title', 'Detail Kehadiran Harian')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -31,7 +31,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Detail Kehadiran Harian</h1>
-                            <p class="text-blue-100 text-sm font-medium">Informasi lengkap kehadiran pegawai</p>
+                            <p class="text-teal-100 text-sm font-medium">Informasi lengkap kehadiran pegawai</p>
                         </div>
                     </div>
                     <div class="flex gap-3">
@@ -61,7 +61,7 @@
                 <!-- Pegawai Information -->
                 <div class="bg-gradient-to-br from-slate-50/50 to-white/50 rounded-2xl p-6 border border-slate-200/60">
                     <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
@@ -72,7 +72,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div class="flex items-center gap-4">
-                                <div class="relative w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                <div class="relative w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                                     {{ strtoupper(substr($kehadiranHarian->pegawai->nama_lengkap, 0, 2)) }}
                                 </div>
                                 <div>
@@ -86,7 +86,7 @@
                         <div class="space-y-3">
                             <div class="flex justify-between items-center py-2 border-b border-slate-100">
                                 <span class="text-sm font-medium text-slate-600">Status Kepegawaian</span>
-                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 border border-indigo-200/50 shadow-sm">
+                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200/50 shadow-sm">
                                     {{ ucfirst($kehadiranHarian->pegawai->status_kepegawaian) }}
                                 </span>
                             </div>
@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="flex justify-between items-center py-3 border-b border-slate-100">
                                     <span class="text-sm font-medium text-slate-600">Jenis Kehadiran</span>
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 border border-indigo-200/50 shadow-sm">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200/50 shadow-sm">
                                         {{ $kehadiranHarian->jenisKehadiran->nama_kehadiran }}
                                     </span>
                                 </div>
@@ -220,3 +220,4 @@
     }
 </style>
 @endsection
+

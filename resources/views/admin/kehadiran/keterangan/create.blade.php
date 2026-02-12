@@ -3,11 +3,11 @@
 @section('title', 'Tambah Keterangan')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Tambah Data Keterangan</h1>
-                            <p class="text-blue-100 text-sm font-medium">Lengkapi formulir untuk menambahkan keterangan
+                            <p class="text-teal-100 text-sm font-medium">Lengkapi formulir untuk menambahkan keterangan
                                 baru</p>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                 <div class="mb-10">
                     <div class="flex items-center gap-4 mb-6">
                         <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg">
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -106,14 +106,14 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-200"
+                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
                                 <select
-                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200 font-medium appearance-none cursor-pointer @error('id_pegawai') border-rose-500 ring-4 ring-rose-500/20 @enderror"
+                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 font-medium appearance-none cursor-pointer @error('id_pegawai') border-rose-500 ring-4 ring-rose-500/20 @enderror"
                                     id="id_pegawai" name="id_pegawai" required>
                                     <option value="">Pilih Pegawai</option>
                                     @foreach($pegawai as $p)
@@ -139,14 +139,14 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-200"
+                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                                     </svg>
                                 </div>
                                 <input type="text"
-                                    class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200 font-medium @error('jenis_absensi') border-rose-500 ring-4 ring-rose-500/20 @enderror"
+                                    class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 font-medium @error('jenis_absensi') border-rose-500 ring-4 ring-rose-500/20 @enderror"
                                     id="jenis_absensi" name="jenis_absensi" value="{{ old('jenis_absensi') }}"
                                     placeholder="Contoh: Sakit, Izin, Cuti" required>
                             </div>
@@ -159,14 +159,14 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-200"
+                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
                                 <select
-                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200 appearance-none cursor-pointer font-medium @error('status_persetujuan') border-rose-500 ring-4 ring-rose-500/20 @enderror"
+                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 appearance-none cursor-pointer font-medium @error('status_persetujuan') border-rose-500 ring-4 ring-rose-500/20 @enderror"
                                     id="status_persetujuan" name="status_persetujuan" required>
                                     <option value="">Pilih Status</option>
                                     <option value="pending" {{ old('status_persetujuan')=='pending' ? 'selected' : ''
@@ -352,9 +352,9 @@
                         Batal
                     </a>
                     <button type="submit"
-                        class="group relative px-8 py-3.5 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        class="group relative px-8 py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-teal-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
                         <div
-                            class="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            class="absolute inset-0 bg-gradient-to-r from-emerald-700 via-teal-700 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity">
                         </div>
                         <div class="relative flex items-center gap-2">
                             <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none"

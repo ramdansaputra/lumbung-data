@@ -70,8 +70,15 @@
     }
 
     @keyframes pulse-live {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
     }
 
     .section-title {
@@ -210,7 +217,8 @@
             <p class="text-slate-600 mt-2 font-light">Selamat datang kembali, Administrator</p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="px-4 py-2 rounded-full bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-700 font-semibold text-sm flex items-center gap-2 border border-emerald-200">
+            <div
+                class="px-4 py-2 rounded-full bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-700 font-semibold text-sm flex items-center gap-2 border border-emerald-200">
                 <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full badge-live"></span>
                 Sistem Aktif
             </div>
@@ -231,9 +239,12 @@
                 <p class="text-sm font-medium text-slate-600">Total Penduduk</p>
                 <h3 class="text-3xl font-bold text-slate-900 mt-2">{{ number_format($pendudukCount ?? 0) }}</h3>
             </div>
-            <div class="icon-box bg-gradient-to-br from-sky-100 to-sky-50 text-sky-600 group-hover:from-sky-200 group-hover:to-sky-100">
+            <div
+                class="icon-box bg-gradient-to-br from-sky-100 to-sky-50 text-sky-600 group-hover:from-sky-200 group-hover:to-sky-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM12 14a8 8 0 00-8 8v2h16v-2a8 8 0 00-8-8z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM12 14a8 8 0 00-8 8v2h16v-2a8 8 0 00-8-8z">
+                    </path>
                 </svg>
             </div>
         </div>
@@ -250,9 +261,12 @@
                 <p class="text-sm font-medium text-slate-600">Total Keluarga</p>
                 <h3 class="text-3xl font-bold text-slate-900 mt-2">{{ number_format($keluargaCount ?? 0) }}</h3>
             </div>
-            <div class="icon-box bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 group-hover:from-emerald-200 group-hover:to-emerald-100">
+            <div
+                class="icon-box bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 group-hover:from-emerald-200 group-hover:to-emerald-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l-4-4m0 0l-2-2m2 2l2-2m-2 2l4 4m0 0l2 2m-2-2l-2 2"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l-4-4m0 0l-2-2m2 2l2-2m-2 2l4 4m0 0l2 2m-2-2l-2 2">
+                    </path>
                 </svg>
             </div>
         </div>
@@ -269,9 +283,11 @@
                 <p class="text-sm font-medium text-slate-600">Rumah Tangga</p>
                 <h3 class="text-3xl font-bold text-slate-900 mt-2">{{ number_format($rumahTanggaCount ?? 0) }}</h3>
             </div>
-            <div class="icon-box bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600 group-hover:from-amber-200 group-hover:to-amber-100">
+            <div
+                class="icon-box bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600 group-hover:from-amber-200 group-hover:to-amber-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2 6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
                 </svg>
             </div>
         </div>
@@ -288,9 +304,12 @@
                 <p class="text-sm font-medium text-slate-600">Surat Tercetak</p>
                 <h3 class="text-3xl font-bold text-slate-900 mt-2">{{ number_format($suratCount ?? 0) }}</h3>
             </div>
-            <div class="icon-box bg-gradient-to-br from-violet-100 to-violet-50 text-violet-600 group-hover:from-violet-200 group-hover:to-violet-100">
+            <div
+                class="icon-box bg-gradient-to-br from-violet-100 to-violet-50 text-violet-600 group-hover:from-violet-200 group-hover:to-violet-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                    </path>
                 </svg>
             </div>
         </div>
@@ -328,7 +347,8 @@
                 </div>
                 <div class="info-row flex-col !border-none">
                     <span class="info-label">Rata-rata Jiwa/KK</span>
-                    <span class="info-value text-emerald-600 mt-1">{{ $keluargaCount > 0 ? number_format($pendudukCount / $keluargaCount, 1) : '0' }}</span>
+                    <span class="info-value text-emerald-600 mt-1">{{ $keluargaCount > 0 ? number_format($pendudukCount
+                        / $keluargaCount, 1) : '0' }}</span>
                 </div>
             </div>
         </div>
@@ -389,7 +409,9 @@
             <div class="space-y-3">
                 <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                     <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
                     </svg>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-slate-700">Lihat Statistik</p>
@@ -399,7 +421,9 @@
                 </div>
                 <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                     <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
                     </svg>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-slate-700">Buat Surat</p>
@@ -409,7 +433,8 @@
                 </div>
                 <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                     <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-slate-700">Kelola Pengguna</p>
@@ -431,21 +456,24 @@
     <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-8">
         <div class="flex items-center justify-between mb-6">
             <h3 class="section-title">Aktivitas Terbaru</h3>
-            <a href="/admin/penduduk" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Lihat Semua →</a>
+            <a href="/admin/penduduk"
+                class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Lihat Semua
+                →</a>
         </div>
         <div class="space-y-0">
             @forelse($recentPenduduk ?? [] as $penduduk)
-                <div class="activity-item">
-                    <div class="activity-dot"></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-slate-900 truncate">{{ $penduduk->nama ?? 'N/A' }}</p>
-                        <p class="text-xs text-slate-500 mt-1">{{ $penduduk->created_at ? $penduduk->created_at->diffForHumans() : 'Baru saja' }}</p>
-                    </div>
+            <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-slate-900 truncate">{{ $penduduk->nama ?? 'N/A' }}</p>
+                    <p class="text-xs text-slate-500 mt-1">{{ $penduduk->created_at ?
+                        $penduduk->created_at->diffForHumans() : 'Baru saja' }}</p>
                 </div>
+            </div>
             @empty
-                <div class="text-center py-12">
-                    <p class="text-sm text-slate-500">Tidak ada aktivitas terbaru</p>
-                </div>
+            <div class="text-center py-12">
+                <p class="text-sm text-slate-500">Tidak ada aktivitas terbaru</p>
+            </div>
             @endforelse
         </div>
     </div>
@@ -459,42 +487,53 @@
         <div class="grid grid-cols-2 gap-4">
             <a href="/admin/penduduk" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM12 14a8 8 0 00-8 8v2h16v-2a8 8 0 00-8-8z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM12 14a8 8 0 00-8 8v2h16v-2a8 8 0 00-8-8z">
+                    </path>
                 </svg>
                 <span class="label">Penduduk</span>
                 <span class="desc">Data Master</span>
             </a>
             <a href="/admin/keluarga" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646M9 10H3m6 10H3m8-6a4 4 0 11-8 0 4 4 0 018 0zM15 20h6m-3-3v6"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646M9 10H3m6 10H3m8-6a4 4 0 11-8 0 4 4 0 018 0zM15 20h6m-3-3v6">
+                    </path>
                 </svg>
                 <span class="label">Keluarga</span>
                 <span class="desc">Data Master</span>
             </a>
             <a href="/admin/layanan-surat/cetak" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                    </path>
                 </svg>
                 <span class="label">Surat</span>
                 <span class="desc">Layanan</span>
             </a>
             <a href="/admin/statistik/kependudukan" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
                 </svg>
                 <span class="label">Statistik</span>
                 <span class="desc">Laporan</span>
             </a>
             <a href="/admin/artikel" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v11l3-3"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v11l3-3"></path>
                 </svg>
                 <span class="label">Artikel</span>
                 <span class="desc">Berita</span>
             </a>
             <a href="/admin/pengguna" class="quick-action-btn">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
                 </svg>
                 <span class="label">Pengguna</span>
                 <span class="desc">Kelola</span>

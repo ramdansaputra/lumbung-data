@@ -192,8 +192,8 @@
                 kesehatan: {{ request()->is('admin/kesehatan*') ? 'true' : 'false' }},
                 kehadiran: {{ request()->is('admin/pegawai*') || request()->is('admin/jenis-kehadiran*') ||
                 request()->is('admin/kehadiran-harian*') || request()->is('admin/jam-kerja*') || request()->is('admin/keterangan*') ||
-                request()->is('admin/dinas-luar*') || request()->is('admin/kehadiran-bulanan*') ||
-                request()->is('admin/kehadiran-tahunan*') || request()->routeIs('kehadiran.rekap') ? 'true' : 'false' }},
+                request()->is('admin/dinas-luar*') || request()->is('admin/kehadiran/rekapitulasi*') || 
+                request()->routeIs('kehadiran.rekapitulasi.*') || request()->routeIs('kehadiran.rekap') ? 'true' : 'false' }},
                 layananSurat: {{ request()->is('admin/layanan-surat*') ? 'true' : 'false' }},
                 sekretariat: {{ request()->is('admin/sekretariat*') ? 'true' : 'false' }},
                 informasiPublik: {{ request()->is('admin/sekretariat/informasi-publik*') ? 'true' : 'false' }},
@@ -483,10 +483,11 @@
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Dinas Luar</span>
                             </a>
-                            <a href="{{ route('admin.kehadiran.rekap') }}"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('kehadiran.rekap') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="{{ route('admin.kehadiran.rekapitulasi.index') }}" class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 
+                                      hover:bg-white/10 hover:text-white 
+                                      {{ request()->routeIs('admin.kehadiran.rekapitulasi.*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
-                                <span class="menu-text whitespace-nowrap">Rekapitulasi </span>
+                                <span class="menu-text whitespace-nowrap">Rekapitulasi Kehadiran</span>
                             </a>
                         </div>
                     </div>
@@ -925,9 +926,6 @@
                     <div class="text-right">
                         <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->role }}</p>
-                        <a href="{{ route('admin.account.setting') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">
-                            Pengaturan Akun
-                        </a>
                     </div>
                     <div
                         class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">

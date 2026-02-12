@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KehadiranHarian extends Model {
-    use HasFactory;
-
-    protected $table = 'kehadiran_harian';
+    protected $table      = 'kehadiran_harian';
+    protected $primaryKey = 'id';
+    public    $timestamps = true;
 
     protected $fillable = [
         'id_pegawai',
@@ -24,17 +23,23 @@ class KehadiranHarian extends Model {
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam_masuk' => 'datetime:H:i',
-        'jam_pulang' => 'datetime:H:i',
     ];
 
-    // Relasi ke pegawai
+    // ── Relasi ke tabel pegawai ──────────────────────────────
     public function pegawai() {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai');
+        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id');
     }
 
-    // Relasi ke jenis kehadiran
+    // ── Relasi ke tabel jenis_kehadiran ──────────────────────
+    // Nama method: jenisKehadiran (camelCase)
+    // Foreign key: id_jenis_kehadiran
+    // Owner key  : id
     public function jenisKehadiran() {
-        return $this->belongsTo(JenisKehadiran::class, 'id_jenis_kehadiran');
+        return $this->belongsTo(JenisKehadiran::class, 'id_jenis_kehadiran', 'id');
+    }
+
+    // ── Alias snake_case (opsional, untuk backward compat) ───
+    public function jenis_kehadiran() {
+        return $this->jenisKehadiran();
     }
 }

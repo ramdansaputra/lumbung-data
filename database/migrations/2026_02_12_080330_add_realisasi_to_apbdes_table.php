@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->date('tanggal')->after('penduduk_id');
+        Schema::table('apbdes', function (Blueprint $table) {
+            $table->decimal('realisasi', 15, 2)->nullable()->after('anggaran');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->dropColumn('tanggal');
+        Schema::table('apbdes', function (Blueprint $table) {
+            $table->dropColumn('realisasi');
         });
     }
 };

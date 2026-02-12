@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KehadiranBulanan extends Model {
-    use HasFactory;
-
-    protected $table = 'kehadiran_bulanan';
+    protected $table      = 'kehadiran_bulanan';
+    protected $primaryKey = 'id';
+    public    $timestamps = true;
 
     protected $fillable = [
         'id_pegawai',
@@ -16,6 +15,8 @@ class KehadiranBulanan extends Model {
         'tahun',
         'jumlah_hadir',
         'jumlah_izin',
+        'jumlah_sakit',      // ✅ TAMBAH INI
+        'jumlah_cuti',       // ✅ TAMBAH INI
         'jumlah_alpha',
         'jumlah_dinas_luar',
         'total_hari_kerja',
@@ -23,12 +24,11 @@ class KehadiranBulanan extends Model {
     ];
 
     protected $casts = [
-        'presentase_kehadiran' => 'decimal:2',
+        'bulan' => 'integer', 
+        'presentase_kehadiran' => 'float',
     ];
 
-    // Relasi ke pegawai
     public function pegawai() {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai');
+        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id');
     }
 }
-    

@@ -3,11 +3,11 @@
 @section('title', 'Detail Keterangan')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -31,7 +31,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Detail Keterangan</h1>
-                            <p class="text-blue-100 text-sm font-medium">Informasi lengkap keterangan absensi pegawai
+                            <p class="text-teal-100 text-sm font-medium">Informasi lengkap keterangan absensi pegawai
                             </p>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                 <div class="mb-10">
                     <div class="flex items-center gap-4 mb-6">
                         <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg">
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -74,10 +74,10 @@
                             <div class="flex items-center gap-4 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl">
                                 <div class="relative group/avatar">
                                     <div
-                                        class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
+                                        class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
                                     </div>
                                     <div
-                                        class="relative w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        class="relative w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                                         {{ strtoupper(substr($keterangan->pegawai->nama_lengkap ?? 'N', 0, 2)) }}
                                     </div>
                                 </div>
@@ -177,8 +177,8 @@
                         <div class="md:col-span-2">
                             <label class="block text-sm font-bold text-slate-700 mb-2">Durasi</label>
                             <div
-                                class="p-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-xl">
-                                <p class="text-base font-bold text-indigo-700">
+                                class="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl">
+                                <p class="text-base font-bold text-emerald-700">
                                     {{
                                     \Carbon\Carbon::parse($keterangan->tanggal_mulai)->diffInDays(\Carbon\Carbon::parse($keterangan->tanggal_selesai))
                                     + 1 }} Hari

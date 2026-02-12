@@ -3,11 +3,11 @@
 @section('title', 'Tambah Dinas Luar')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Tambah Data Dinas Luar</h1>
-                            <p class="text-blue-100 text-sm font-medium">Lengkapi formulir untuk menambahkan dinas luar
+                            <p class="text-teal-100 text-sm font-medium">Lengkapi formulir untuk menambahkan dinas luar
                                 baru</p>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                 <div class="mb-10">
                     <div class="flex items-center gap-4 mb-6">
                         <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg">
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -106,14 +106,14 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-200"
+                                    <svg class="w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
                                 <select
-                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200 font-medium appearance-none cursor-pointer @error('id_pegawai') border-rose-500 ring-4 ring-rose-500/20 @enderror"
+                                    class="w-full pl-12 pr-10 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 font-medium appearance-none cursor-pointer @error('id_pegawai') border-rose-500 ring-4 ring-rose-500/20 @enderror"
                                     id="id_pegawai" name="id_pegawai" required>
                                     <option value="">Pilih Pegawai</option>
                                     @foreach($pegawai as $p)
@@ -301,9 +301,9 @@
                         Batal
                     </a>
                     <button type="submit"
-                        class="group relative px-8 py-3.5 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        class="group relative px-8 py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-teal-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
                         <div
-                            class="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            class="absolute inset-0 bg-gradient-to-r from-emerald-700 via-teal-700 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity">
                         </div>
                         <div class="relative flex items-center gap-2">
                             <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none"
