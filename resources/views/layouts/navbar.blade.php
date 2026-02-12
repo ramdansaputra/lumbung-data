@@ -22,6 +22,11 @@
                 <a href="{{ route('wilayah') }}" class="hover:text-emerald-100 transition">Wilayah</a>
                 <a href="{{ route('artikel') }}" class="hover:text-emerald-100 transition">Berita</a>
                 <a href="{{ route('kontak') }}" class="hover:text-emerald-100 transition">Kontak</a>
+                <a href="{{ route('setup') }}" 
+                class="ml-4 px-4 py-2 bg-white text-emerald-700 font-semibold rounded-lg 
+                        hover:bg-emerald-50 transition duration-300 shadow-sm">
+                    Login Sebagai Admin
+                </a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -41,6 +46,11 @@
             <a href="{{ route('wilayah') }}" class="block py-2 hover:text-emerald-100">Wilayah</a>
             <a href="{{ route('artikel') }}" class="block py-2 hover:text-emerald-100">Berita</a>
             <a href="{{ route('kontak') }}" class="block py-2 hover:text-emerald-100">Kontak</a>
+            <a href="{{ route('setup') }}" 
+            class="block mt-3 px-4 py-2 bg-white text-emerald-700 text-center font-semibold 
+                    rounded-lg hover:bg-emerald-50 transition duration-300 shadow-sm">
+                Login Sebagai Admin
+            </a>
         </div>
     </div>
 </nav>
