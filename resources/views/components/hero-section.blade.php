@@ -5,7 +5,7 @@
     @if($image)
         <img src="{{ $image }}" alt="" class="absolute inset-0 w-full h-full object-cover opacity-30">
     @else
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-800"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-600 to-emerald-900"></div>
     @endif
     
     <div class="relative z-10 container mx-auto px-4">
