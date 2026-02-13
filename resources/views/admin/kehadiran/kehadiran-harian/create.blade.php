@@ -3,11 +3,11 @@
 @section('title', 'Tambah Kehadiran Harian')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Tambah Kehadiran Harian</h1>
-                            <p class="text-blue-100 text-sm font-medium">Catat kehadiran pegawai untuk hari ini</p>
+                            <p class="text-teal-100 text-sm font-medium">Catat kehadiran pegawai untuk hari ini</p>
                         </div>
                     </div>
                     <a href="{{ route('admin.kehadiran-harian.index') }}"
@@ -52,7 +52,7 @@
                     <!-- Basic Information -->
                     <div class="bg-gradient-to-br from-slate-50/50 to-white/50 rounded-2xl p-6 border border-slate-200/60">
                         <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -65,7 +65,7 @@
                             <div class="space-y-2">
                                 <label for="id_pegawai" class="block text-sm font-bold text-slate-700">Pegawai <span class="text-red-500">*</span></label>
                                 <select id="id_pegawai" name="id_pegawai"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                     required>
                                     <option value="">Pilih Pegawai</option>
                                     @foreach($pegawai as $p)
@@ -81,7 +81,7 @@
                             <div class="space-y-2">
                                 <label for="id_jenis_kehadiran" class="block text-sm font-bold text-slate-700">Jenis Kehadiran <span class="text-red-500">*</span></label>
                                 <select id="id_jenis_kehadiran" name="id_jenis_kehadiran"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                     required>
                                     <option value="">Pilih Jenis Kehadiran</option>
                                     @foreach($jenisKehadiran as $jk)
@@ -97,7 +97,7 @@
                             <div class="space-y-2">
                                 <label for="tanggal" class="block text-sm font-bold text-slate-700">Tanggal <span class="text-red-500">*</span></label>
                                 <input type="date" id="tanggal" name="tanggal" value="{{ date('Y-m-d') }}"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                     required>
                                 @error('tanggal')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
@@ -108,7 +108,7 @@
                             <div class="space-y-2">
                                 <label for="hari" class="block text-sm font-bold text-slate-700">Hari <span class="text-red-500">*</span></label>
                                 <input type="text" id="hari" name="hari" value="{{ \Carbon\Carbon::now()->translatedFormat('l') }}"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                     required readonly>
                                 @error('hari')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
@@ -133,7 +133,7 @@
                             <div class="space-y-2">
                                 <label for="jam_masuk" class="block text-sm font-bold text-slate-700">Jam Masuk</label>
                                 <input type="time" id="jam_masuk" name="jam_masuk"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md">
                                 @error('jam_masuk')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
                                 @enderror
@@ -143,7 +143,7 @@
                             <div class="space-y-2">
                                 <label for="jam_pulang" class="block text-sm font-bold text-slate-700">Jam Pulang</label>
                                 <input type="time" id="jam_pulang" name="jam_pulang"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md">
                                 @error('jam_pulang')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
                                 @enderror
@@ -167,7 +167,7 @@
                             <div class="space-y-2">
                                 <label for="metode_absen" class="block text-sm font-bold text-slate-700">Metode Absen <span class="text-red-500">*</span></label>
                                 <select id="metode_absen" name="metode_absen"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                     required>
                                     <option value="">Pilih Metode</option>
                                     <option value="manual">Manual</option>
@@ -183,7 +183,7 @@
                             <div class="space-y-2">
                                 <label for="lokasi_absen" class="block text-sm font-bold text-slate-700">Lokasi Absen</label>
                                 <input type="text" id="lokasi_absen" name="lokasi_absen" placeholder="Masukkan lokasi absen"
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md">
                                 @error('lokasi_absen')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
                                 @enderror
@@ -194,7 +194,7 @@
                         <div class="mt-6 space-y-2">
                             <label for="keterangan" class="block text-sm font-bold text-slate-700">Keterangan</label>
                             <textarea id="keterangan" name="keterangan" rows="4" placeholder="Masukkan keterangan jika ada"
-                                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow-md resize-none"></textarea>
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 shadow-sm hover:shadow-md resize-none"></textarea>
                             @error('keterangan')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                             @enderror
@@ -208,7 +208,7 @@
                             Batal
                         </a>
                         <button type="submit"
-                            class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+                            class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                             Simpan Kehadiran
                         </button>
                     </div>
@@ -249,3 +249,4 @@ document.getElementById('tanggal').addEventListener('change', function() {
     }
 </style>
 @endsection
+

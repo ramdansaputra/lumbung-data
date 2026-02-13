@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->string('jenis_pemeriksaan')->after('tanggal');
+        Schema::table('transaksi_kas', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->dropColumn('jenis_pemeriksaan');
+        Schema::table('transaksi_kas', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 };

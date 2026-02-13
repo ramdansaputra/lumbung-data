@@ -37,6 +37,13 @@ class JenisKehadiranSeeder extends Seeder {
                 'updated_at' => now(),
             ],
             [
+                'kode_kehadiran' => 'C',
+                'nama_kehadiran' => 'Cuti',
+                'keterangan' => 'Pegawai sedang cuti',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'kode_kehadiran' => 'DL',
                 'nama_kehadiran' => 'Dinas Luar',
                 'keterangan' => 'Pegawai sedang bertugas di luar kantor',
@@ -45,6 +52,11 @@ class JenisKehadiranSeeder extends Seeder {
             ],
         ];
 
-        DB::table('jenis_kehadiran')->insert($jenisKehadiran);
+        foreach ($jenisKehadiran as $data) {
+            DB::table('jenis_kehadiran')->updateOrInsert(
+                ['kode_kehadiran' => $data['kode_kehadiran']],
+                $data
+            );
+        }
     }
 }

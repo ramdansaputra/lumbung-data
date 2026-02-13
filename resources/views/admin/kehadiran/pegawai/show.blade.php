@@ -3,11 +3,11 @@
 @section('title', 'Detail Pegawai')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-6xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-600">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-teal-600 via-teal-600 to-emerald-600">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Detail Data Pegawai</h1>
-                            <p class="text-cyan-100 text-sm font-medium">Informasi lengkap pegawai {{
+                            <p class="text-teal-100 text-sm font-medium">Informasi lengkap pegawai {{
                                 $pegawai->nama_lengkap }}</p>
                         </div>
                     </div>
@@ -48,14 +48,14 @@
 
         <!-- Profile Card -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="bg-gradient-to-r from-cyan-50 via-blue-50 to-indigo-50 px-8 py-8 border-b-2 border-slate-100">
+            <div class="bg-gradient-to-r from-teal-50 via-teal-50 to-emerald-50 px-8 py-8 border-b-2 border-slate-100">
                 <div class="flex flex-col lg:flex-row items-start lg:items-center gap-8">
                     <div class="relative group">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-cyan-500 to-indigo-600 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-all duration-300">
+                            class="absolute inset-0 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-all duration-300">
                         </div>
                         <div
-                            class="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-cyan-600 to-indigo-700 flex items-center justify-center text-white font-bold text-4xl shadow-2xl border-4 border-white">
+                            class="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-teal-600 to-emerald-700 flex items-center justify-center text-white font-bold text-4xl shadow-2xl border-4 border-white">
                             {{ strtoupper(substr($pegawai->nama_lengkap, 0, 2)) }}
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                         <h2 class="text-3xl font-bold text-slate-900 mb-3">{{ $pegawai->nama_lengkap }}</h2>
                         <div class="flex flex-wrap gap-3">
                             <span
-                                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 border border-indigo-200/50 shadow-sm">
+                                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200/50 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -119,7 +119,7 @@
                             class="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border-2 border-slate-100 shadow-sm">
                             <div class="flex items-center gap-4 mb-6">
                                 <div
-                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg">
+                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -136,7 +136,7 @@
                                 <div
                                     class="group hover:bg-white hover:shadow-md rounded-xl p-4 transition-all duration-200 -mx-4">
                                     <dt class="text-sm font-bold text-slate-500 mb-2 flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor"
+                                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -149,7 +149,7 @@
                                 <div
                                     class="group hover:bg-white hover:shadow-md rounded-xl p-4 transition-all duration-200 -mx-4">
                                     <dt class="text-sm font-bold text-slate-500 mb-2 flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor"
+                                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
@@ -162,7 +162,7 @@
                                 <div
                                     class="group hover:bg-white hover:shadow-md rounded-xl p-4 transition-all duration-200 -mx-4">
                                     <dt class="text-sm font-bold text-slate-500 mb-2 flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor"
+                                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -285,7 +285,7 @@
                                     </dt>
                                     <dd>
                                         <span
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 border border-indigo-200/50 shadow-sm">
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200/50 shadow-sm">
                                             {{ ucfirst($pegawai->status_kepegawaian) }}
                                         </span>
                                     </dd>
@@ -333,7 +333,7 @@
                             class="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border-2 border-slate-100 shadow-sm">
                             <div class="flex items-center gap-4 mb-5">
                                 <div
-                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-lg">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -371,11 +371,11 @@
                                 </a>
 
                                 <a href="{{ route('admin.pegawai.index') }}"
-                                    class="group flex items-center justify-between w-full px-5 py-4 bg-white border-2 border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-lg transition-all duration-200">
+                                    class="group flex items-center justify-between w-full px-5 py-4 bg-white border-2 border-slate-200 rounded-xl hover:border-emerald-500 hover:shadow-lg transition-all duration-200">
                                     <div class="flex items-center gap-3">
                                         <div
-                                            class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center group-hover:from-indigo-200 group-hover:to-blue-200 transition-colors">
-                                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor"
+                                            class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center group-hover:from-emerald-200 group-hover:to-teal-200 transition-colors">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -386,7 +386,7 @@
                                             <p class="text-xs text-slate-500 font-medium">Kembali ke halaman daftar</p>
                                         </div>
                                     </div>
-                                    <svg class="w-5 h-5 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all"
+                                    <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M9 5l7 7-7 7" />

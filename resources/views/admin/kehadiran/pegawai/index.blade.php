@@ -3,11 +3,11 @@
 @section('title', 'Data Pegawai')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-emerald-50 p-6">
     <div class="max-w-7xl mx-auto space-y-6">
         <!-- Header Section -->
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-            <div class="relative px-8 py-8 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500">
+            <div class="relative px-8 py-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-teal-500">
                 <!-- Decorative Elements -->
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]">
                 </div>
@@ -29,14 +29,14 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-1.5 tracking-tight">Data Pegawai</h1>
-                            <p class="text-blue-100 text-sm font-medium">Kelola informasi pegawai dengan sistem modern
+                            <p class="text-teal-100 text-sm font-medium">Kelola informasi pegawai dengan sistem modern
                             </p>
                         </div>
                     </div>
                     <a href="{{ route('admin.pegawai.create') }}"
-                        class="group relative inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-6 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="group relative inline-flex items-center justify-center gap-2 bg-white text-emerald-600 px-6 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                         <div
-                            class="absolute inset-0 bg-gradient-to-r from-white to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            class="absolute inset-0 bg-gradient-to-r from-white to-teal-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         </div>
                         <svg class="relative w-5 h-5 group-hover:rotate-90 transition-transform duration-500"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,11 +54,11 @@
                 <div
                     class="group relative bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div
-                        class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     </div>
                     <div class="relative flex items-center gap-4">
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-xl group-hover:shadow-indigo-500/40 transition-all duration-300">
+                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-xl group-hover:shadow-emerald-500/40 transition-all duration-300">
                             <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -163,10 +163,10 @@
                     <tbody class="divide-y divide-slate-100">
                         @forelse($pegawai as $index => $item)
                         <tr
-                            class="group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-blue-50/50 transition-all duration-200">
+                            class="group hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-teal-50/50 transition-all duration-200">
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <span
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-sm font-bold text-slate-700 group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
+                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-sm font-bold text-slate-700 group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
                                     {{ $pegawai->firstItem() + $index }}
                                 </span>
                             </td>
@@ -180,10 +180,10 @@
                                 <div class="flex items-center gap-3">
                                     <div class="relative group/avatar">
                                         <div
-                                            class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
+                                            class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl blur opacity-50 group-hover/avatar:opacity-75 transition-opacity">
                                         </div>
                                         <div
-                                            class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                            class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                             {{ strtoupper(substr($item->nama_lengkap, 0, 2)) }}
                                         </div>
                                     </div>
@@ -198,7 +198,7 @@
                             </td>
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <span
-                                    class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 border border-indigo-200/50 shadow-sm">
+                                    class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200/50 shadow-sm">
                                     {{ ucfirst($item->status_kepegawaian) }}
                                 </span>
                             </td>
@@ -228,9 +228,9 @@
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('admin.pegawai.show', $item->id) }}"
-                                        class="group/btn relative inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-xl transition-all duration-200 hover:scale-105 overflow-hidden">
+                                        class="group/btn relative inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-xl transition-all duration-200 hover:scale-105 overflow-hidden">
                                         <div
-                                            class="absolute inset-0 bg-gradient-to-r from-indigo-700 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity">
+                                            class="absolute inset-0 bg-gradient-to-r from-emerald-700 to-teal-700 opacity-0 group-hover/btn:opacity-100 transition-opacity">
                                         </div>
                                         <svg class="relative w-4 h-4" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -295,9 +295,9 @@
                                     <p class="text-sm text-slate-500 mb-8 max-w-md">Mulai tambahkan data pegawai untuk
                                         mengelola sistem kehadiran dengan lebih efektif</p>
                                     <a href="{{ route('admin.pegawai.create') }}"
-                                        class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                                        class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-teal-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
                                         <div
-                                            class="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            class="absolute inset-0 bg-gradient-to-r from-emerald-700 via-teal-700 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity">
                                         </div>
                                         <svg class="relative w-6 h-6 group-hover:rotate-90 transition-transform duration-500"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">

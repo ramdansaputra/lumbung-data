@@ -8,25 +8,25 @@ use App\Models\IdentitasDesa;
 class IdentitasDesaSeeder extends Seeder {
     public function run(): void {
         IdentitasDesa::create([
-            'nama_desa'       => 'Desa Contoh',
-            'kode_desa'       => '0001',
-            'kode_pos'        => '12345',
+            'nama_desa'       => '',
+            'kode_desa'       => '',
+            'kode_pos'        => '',
 
-            'kecamatan'       => 'Kecamatan Contoh',
-            'kabupaten'       => 'Kabupaten Contoh',
-            'provinsi'        => 'Jawa Barat',
+            'kecamatan'       => '',
+            'kabupaten'       => '',
+            'provinsi'        => '',
 
-            'alamat_kantor'   => 'Jl. Raya Desa No. 1',
-            'email_desa'      => 'desa@contoh.id',
-            'telepon_desa'    => '021123456',
-            'website_desa'    => 'https://desacontoh.id',
+            'alamat_kantor'   => '',
+            'email_desa'      => '',
+            'telepon_desa'    => '',
+            'website_desa'    => '',
 
-            'kepala_desa'     => 'Kepala Desa Contoh',
-            'nip_kepala_desa' => '197001011990011001',
+            'kepala_desa'     => '',
+            'nip_kepala_desa' => '',
 
-            'latitude'        => -6.2000000,
-            'longitude'       => 106.8166667,
-            'link_peta'       => 'https://maps.google.com',
+            'latitude'        => null,
+            'longitude'       => null,
+            'link_peta'       => '',
         ]);
     }
 }

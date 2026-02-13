@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('identitas_desa', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('nama_desa')->default('Desa Belum Diatur');
-            $table->string('kode_desa')->default('000000');
+            $table->string('nama_desa')->default('');
+            $table->string('kode_desa')->default('');
             $table->string('kode_bps_desa')->nullable();
             $table->string('kode_pos')->nullable();
-            $table->string('kecamatan')->default('-');
+            $table->string('kecamatan')->default('');
             $table->string('kode_kecamatan')->nullable();
             $table->string('nama_camat')->nullable();
             $table->string('nip_camat')->nullable();
-            $table->string('kabupaten')->default('-');
+            $table->string('kabupaten')->default('');
             $table->string('kode_kabupaten')->nullable();
-            $table->string('provinsi')->default('-');
+            $table->string('provinsi')->default('');
             $table->string('kode_provinsi')->nullable();
             $table->text('alamat_kantor')->nullable();
             $table->string('kantor_desa')->nullable();

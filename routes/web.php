@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\KeteranganController;
 use App\Http\Controllers\Admin\DinasLuarController;
 use App\Http\Controllers\Admin\KehadiranBulananController;
 use App\Http\Controllers\Admin\KehadiranTahunanController;
+use App\Http\Controllers\Admin\RekapitulasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,13 +120,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         [App\Http\Controllers\Admin\IdentitasDesaController::class, 'update']
     )->name('identitas-desa.update');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ACCOUNT SETTINGS
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/account/setting', [App\Http\Controllers\Admin\AccountController::class, 'index'])->name('account.setting');
-    Route::put('/account/setting', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('account.update');
+
 });
 
 // Other admin routes - require identitas desa to be filled
@@ -452,25 +447,30 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     // Routes untuk Dinas Luar
     Route::resource('dinas-luar', DinasLuarController::class);
 
-    // Routes untuk Kehadiran Bulanan
-    Route::get('kehadiran/rekap', [KehadiranBulananController::class, 'rekap'])->name('kehadiran.rekap');
-    Route::resource('kehadiran-bulanan', KehadiranBulananController::class);
-
-    // Routes untuk Kehadiran Tahunan
-    Route::resource('kehadiran-tahunan', KehadiranTahunanController::class);
+    // Routes untuk rekapitulasi
+    Route::prefix('kehadiran')->name('kehadiran.')->group(function () {
+        Route::get('/rekapitulasi', [\App\Http\Controllers\Admin\RekapitulasiController::class, 'index'])
+            ->name('rekapitulasi.index');
+        Route::get('/rekapitulasi/export-excel', [\App\Http\Controllers\Admin\RekapitulasiController::class, 'exportExcel'])
+            ->name('rekapitulasi.export.excel');
+        Route::get('/rekapitulasi/export-pdf', [\App\Http\Controllers\Admin\RekapitulasiController::class, 'exportPdf'])
+            ->name('rekapitulasi.export.pdf');
+    });
 
     /*
     |--------------------------------------------------------------------------
     | KEUANGAN & LAPORAN
     |--------------------------------------------------------------------------
     */
-    Route::get('/keuangan', function () {
-        return view('admin.keuangan');
-    })->name('keuangan');
+    Route::get('/keuangan', [App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('keuangan');
 
     Route::get('/keuangan/laporan', [App\Http\Controllers\Admin\KeuanganController::class, 'laporan'])->name('keuangan.laporan');
+    Route::get('/keuangan/laporan/export-excel', [App\Http\Controllers\Admin\KeuanganController::class, 'exportExcel'])->name('keuangan.laporan.export-excel');
     Route::get('/keuangan/input-data', [App\Http\Controllers\Admin\KeuanganController::class, 'inputData'])->name('keuangan.input-data');
+    Route::post('/keuangan/input-data', [App\Http\Controllers\Admin\KeuanganController::class, 'store'])->name('keuangan.store');
     Route::get('/keuangan/laporan-apbdes', [App\Http\Controllers\Admin\KeuanganController::class, 'laporanApbdes'])->name('keuangan.laporan-apbdes');
+    Route::put('/keuangan/{id}', [App\Http\Controllers\Admin\KeuanganController::class, 'update'])->name('keuangan.update');
+    Route::delete('/keuangan/{id}', [App\Http\Controllers\Admin\KeuanganController::class, 'destroy'])->name('keuangan.destroy');
 
     Route::get('/laporan', function () {
         return view('admin.laporan');

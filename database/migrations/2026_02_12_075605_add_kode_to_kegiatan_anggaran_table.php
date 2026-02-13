@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->enum('status_stunting', ['normal', 'stunting', 'risiko_stunting'])->nullable()->after('status_gizi');
+        Schema::table('kegiatan_anggaran', function (Blueprint $table) {
+            $table->string('kode')->nullable()->after('id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pemantauan_kesehatans', function (Blueprint $table) {
-            $table->dropColumn('status_stunting');
+        Schema::table('kegiatan_anggaran', function (Blueprint $table) {
+            $table->dropColumn('kode');
         });
     }
 };
