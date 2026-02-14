@@ -694,6 +694,11 @@
                             </svg>
                         </button>
                         <div class="submenu mt-1 ml-4 space-y-1" :class="{ 'open': keuangan }">
+                            <a href="/admin/keuangan/kas-desa"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->is('admin/keuangan/kas-desa*') ? 'bg-white/15 text-white' : '' }}">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
+                                <span class="menu-text whitespace-nowrap">Kas Desa</span>
+                            </a>
                             <a href="/admin/keuangan/laporan"
                                 class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>

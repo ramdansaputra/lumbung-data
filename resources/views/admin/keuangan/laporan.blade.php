@@ -153,10 +153,6 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Jenis</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                            Kategori</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                            Keterangan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Pemasukan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Pengeluaran</th>
@@ -181,14 +177,6 @@
                                 {{ $transaction->tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                            {{ $transaction->kategori ?? '-' }}
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-900">
-                            <div class="max-w-xs truncate" title="{{ $transaction->keterangan }}">
-                                {{ Str::limit($transaction->keterangan, 50) }}
-                            </div>
-                        </td>
                         <td
                             class="px-6 py-4 whitespace-nowrap text-sm {{ $transaction->tipe === 'masuk' ? 'text-emerald-600 font-medium' : 'text-slate-400' }}">
                             {{ $transaction->tipe === 'masuk' ? 'Rp ' . number_format($transaction->jumlah, 0, ',', '.')
@@ -204,14 +192,6 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex gap-2">
-                                <button onclick="viewDetail({{ $transaction->id }})"
-                                    class="text-blue-600 hover:text-blue-900" title="Lihat Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="editTransaction({{ $transaction->id }})"
-                                    class="text-yellow-600 hover:text-yellow-900" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
                                 <form action="{{ route('admin.keuangan.destroy', $transaction->id) }}" method="POST"
                                     class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?')">
@@ -226,7 +206,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="px-6 py-8 text-center text-sm text-slate-500">
+                        <td colspan="7" class="px-6 py-8 text-center text-sm text-slate-500">
                             <i class="fas fa-inbox text-4xl mb-3 block text-slate-300"></i>
                             <p class="font-medium">Tidak ada data transaksi</p>
                             <p class="text-xs mt-1">Silakan tambah transaksi baru atau ubah filter pencarian</p>
@@ -287,18 +267,6 @@
         @endif
     </div>
 </div>
-
-<script>
-    function viewDetail(id) {
-    // Implement view detail modal/page
-    alert('View detail untuk transaksi ID: ' + id);
-}
-
-function editTransaction(id) {
-    // Implement edit functionality
-    alert('Edit transaksi ID: ' + id);
-}
-</script>
 
 <style>
     @media print {

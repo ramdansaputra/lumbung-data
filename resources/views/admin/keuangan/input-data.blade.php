@@ -47,7 +47,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <form action="{{ route('admin.keuangan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6"
+        <form action="{{ route('admin.keuangan.store') }}" method="POST" class="space-y-6"
             id="transaksiForm">
             @csrf
 
@@ -82,27 +82,22 @@
                 </div>
             </div>
 
-            <!-- Transaction Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Kategori</label>
-                    <input type="text" name="kategori" value="{{ old('kategori') }}" placeholder="Masukkan kategori"
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('kategori') border-red-500 @enderror"
-                        maxlength="255">
-                    @error('kategori')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Nomor Bukti</label>
-                    <input type="text" name="nomor_bukti" value="{{ old('nomor_bukti') }}"
-                        placeholder="Masukkan nomor bukti"
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('nomor_bukti') border-red-500 @enderror"
-                        maxlength="255">
-                    @error('nomor_bukti')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+            <!-- Kas Desa -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Kas Desa <span class="text-red-500">*</span>
+                </label>
+                <select name="kas_id"
+                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('kas_id') border-red-500 @enderror"
+                    required>
+                    <option value="">Pilih kas desa</option>
+                    @foreach($kasDesa as $kas)
+                    <option value="{{ $kas->id }}" {{ old('kas_id')==$kas->id ? 'selected' : '' }}>{{ $kas->nama }}</option>
+                    @endforeach
+                </select>
+                @error('kas_id')
+                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Amount -->
@@ -114,49 +109,6 @@
                     class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('jumlah') border-red-500 @enderror"
                     required>
                 @error('jumlah')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Description -->
-            <div>
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                    Keterangan <span class="text-red-500">*</span>
-                </label>
-                <textarea name="keterangan" rows="4" placeholder="Jelaskan detail transaksi..."
-                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('keterangan') border-red-500 @enderror"
-                    maxlength="1000" required>{{ old('keterangan') }}</textarea>
-                @error('keterangan')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- File Upload -->
-            <div>
-                <label class="block text-sm font-medium text-slate-700 mb-2">Lampiran</label>
-                <div
-                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg hover:border-emerald-400 transition">
-                    <div class="space-y-1 text-center">
-                        <svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none"
-                            viewBox="0 0 48 48" aria-hidden="true">
-                            <path
-                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="flex text-sm text-slate-600">
-                            <label for="file-upload"
-                                class="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500">
-                                <span>Upload file</span>
-                                <input id="file-upload" name="file-upload" type="file" accept=".jpg,.jpeg,.png,.pdf"
-                                    class="sr-only" onchange="displayFileName(this)">
-                            </label>
-                            <p class="pl-1">atau drag and drop</p>
-                        </div>
-                        <p class="text-xs text-slate-500">PNG, JPG, PDF hingga 10MB</p>
-                        <p id="file-name" class="text-sm text-emerald-600 font-medium mt-2"></p>
-                    </div>
-                </div>
-                @error('file-upload')
                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
@@ -186,10 +138,6 @@
                         <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Jenis</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                            Keterangan</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                            Kategori</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Jumlah</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Status</th>
@@ -207,12 +155,6 @@
                                 {{ $transaction->tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran' }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-sm text-slate-900">
-                            {{ Str::limit($transaction->keterangan, 50) }}
-                        </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-slate-600">
-                            {{ $transaction->kategori ?? '-' }}
-                        </td>
                         <td
                             class="px-4 py-3 whitespace-nowrap text-sm {{ $transaction->tipe === 'masuk' ? 'text-emerald-600 font-medium' : 'text-red-600 font-medium' }}">
                             Rp {{ number_format($transaction->jumlah, 0, ',', '.') }}
@@ -226,7 +168,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-sm text-slate-500">
+                        <td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">
                             <i class="fas fa-inbox text-3xl mb-2 block text-slate-300"></i>
                             Belum ada transaksi
                         </td>
@@ -239,23 +181,14 @@
 </div>
 
 <script>
-    function displayFileName(input) {
-    const fileName = document.getElementById('file-name');
-    if (input.files && input.files[0]) {
-        fileName.textContent = 'File: ' + input.files[0].name;
-    } else {
-        fileName.textContent = '';
-    }
-}
-
-// Form validation
-document.getElementById('transaksiForm').addEventListener('submit', function(e) {
-    const jumlah = parseFloat(document.querySelector('input[name="jumlah"]').value);
-    if (jumlah <= 0) {
-        e.preventDefault();
-        alert('Jumlah harus lebih besar dari 0');
-        return false;
-    }
-});
+    // Form validation
+    document.getElementById('transaksiForm').addEventListener('submit', function(e) {
+        const jumlah = parseFloat(document.querySelector('input[name="jumlah"]').value);
+        if (jumlah <= 0) {
+            e.preventDefault();
+            alert('Jumlah harus lebih besar dari 0');
+            return false;
+        }
+    });
 </script>
 @endsection

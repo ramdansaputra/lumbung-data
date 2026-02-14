@@ -482,15 +482,30 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | KEUANGAN & LAPORAN
     |--------------------------------------------------------------------------
     */
-    Route::get('/keuangan', [App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('keuangan');
+    Route::prefix('keuangan')->group(function () {
+        Route::get('/laporan', [KeuanganController::class, 'laporan'])->name('keuangan.laporan');
+        Route::get('/input-data', [KeuanganController::class, 'inputData'])->name('keuangan.input-data');
+        Route::post('/input-data', [KeuanganController::class, 'store'])->name('keuangan.store');
+        Route::delete('/{id}', [KeuanganController::class, 'destroy'])->name('keuangan.destroy');
+        Route::get('/laporan-apbdes', [KeuanganController::class, 'laporanApbdes'])->name('keuangan.laporan-apbdes');
+        
+        // Kas Desa Management
+        Route::get('/kas-desa', [KeuanganController::class, 'kasDesa'])->name('keuangan.kas-desa');
+        Route::get('/kas-desa/create', [KeuanganController::class, 'kasDesaCreate'])->name('keuangan.kas-desa.create');
+        Route::post('/kas-desa', [KeuanganController::class, 'kasDesaStore'])->name('keuangan.kas-desa.store');
+        Route::get('/kas-desa/{id}/edit', [KeuanganController::class, 'kasDesaEdit'])->name('keuangan.kas-desa.edit');
+        Route::put('/kas-desa/{id}', [KeuanganController::class, 'kasDesaUpdate'])->name('keuangan.kas-desa.update');
+        Route::delete('/kas-desa/{id}', [KeuanganController::class, 'kasDesaDestroy'])->name('keuangan.kas-desa.destroy');
 
-    Route::get('/keuangan/laporan', [App\Http\Controllers\Admin\KeuanganController::class, 'laporan'])->name('keuangan.laporan');
-    Route::get('/keuangan/laporan/export-excel', [App\Http\Controllers\Admin\KeuanganController::class, 'exportExcel'])->name('keuangan.laporan.export-excel');
-    Route::get('/keuangan/input-data', [App\Http\Controllers\Admin\KeuanganController::class, 'inputData'])->name('keuangan.input-data');
-    Route::post('/keuangan/input-data', [App\Http\Controllers\Admin\KeuanganController::class, 'store'])->name('keuangan.store');
-    Route::get('/keuangan/laporan-apbdes', [App\Http\Controllers\Admin\KeuanganController::class, 'laporanApbdes'])->name('keuangan.laporan-apbdes');
-    Route::put('/keuangan/{id}', [App\Http\Controllers\Admin\KeuanganController::class, 'update'])->name('keuangan.update');
-    Route::delete('/keuangan/{id}', [App\Http\Controllers\Admin\KeuanganController::class, 'destroy'])->name('keuangan.destroy');
+        // APBDes CRUD
+        Route::get('/apbdes', [KeuanganController::class, 'apbdes'])->name('keuangan.apbdes');
+        Route::get('/apbdes/create', [KeuanganController::class, 'apbdesCreate'])->name('keuangan.apbdes.create');
+        Route::post('/apbdes', [KeuanganController::class, 'apbdesStore'])->name('keuangan.apbdes.store');
+        Route::get('/apbdes/{id}/edit', [KeuanganController::class, 'apbdesEdit'])->name('keuangan.apbdes.edit');
+        Route::put('/apbdes/{id}', [KeuanganController::class, 'apbdesUpdate'])->name('keuangan.apbdes.update');
+        Route::delete('/apbdes/{id}', [KeuanganController::class, 'apbdesDestroy'])->name('keuangan.apbdes.destroy');
+        Route::post('/apbdes/{apbdesId}/realisasi', [KeuanganController::class, 'realisasiStore'])->name('keuangan.apbdes.realisasi.store');
+    });
 
     Route::get('/laporan', function () {
         return view('admin.laporan');
