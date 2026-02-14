@@ -2,22 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SumberDana extends Model
-{
-    use HasFactory;
-
+class SumberDana extends Model {
     protected $table = 'sumber_dana';
 
-    protected $fillable = [
-        'nama_sumber',
-        'keterangan',
-    ];
+    // ⚠️ Perhatian: kolom di migration adalah 'nama_sumber', BUKAN 'nama'
+    protected $fillable = ['nama_sumber', 'keterangan'];
 
-    public function apbdes()
-    {
+    public function apbdes() {
         return $this->hasMany(Apbdes::class, 'sumber_dana_id');
     }
 }

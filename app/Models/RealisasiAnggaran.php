@@ -2,13 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RealisasiAnggaran extends Model
-{
-    use HasFactory;
-
+class RealisasiAnggaran extends Model {
     protected $table = 'realisasi_anggaran';
 
     protected $fillable = [
@@ -16,21 +12,10 @@ class RealisasiAnggaran extends Model
         'tanggal',
         'jumlah',
         'keterangan',
-        'bukti',
+        'bukti'
     ];
 
-    protected $casts = [
-        'tanggal' => 'date',
-        'jumlah' => 'decimal:2',
-    ];
-
-    public function apbdes()
-    {
+    public function apbdes() {
         return $this->belongsTo(Apbdes::class, 'apbdes_id');
-    }
-
-    public function transaksiKas()
-    {
-        return $this->hasMany(TransaksiKas::class, 'realisasi_id');
     }
 }
