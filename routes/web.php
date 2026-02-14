@@ -79,9 +79,29 @@ Route::get('/kontak', [FrontendController::class, 'kontak'])
 Route::post('/kontak', [FrontendController::class, 'storeKontak'])
     ->name('kontak.store');
 
-
 Route::get('/pemerintahan', [FrontendController::class, 'pemerintahan'])
     ->name('pemerintahan');
+
+Route::get('/kebijakan-privasi', function () {
+    // Perhatikan penambahan 'frontend.' di depan
+    return view('frontend.pages.kebijakan-privasi.index', [
+        'lastUpdated' => \Carbon\Carbon::parse('2025-01-01')->isoFormat('D MMMM YYYY')
+    ]);
+})->name('kebijakan-privasi');
+
+// routes/web.php
+
+Route::get('/syarat-ketentuan', function () {
+    return view('frontend.pages.syarat-ketentuan.index', [
+        'lastUpdated' => \Carbon\Carbon::parse('2025-01-01')->isoFormat('D MMMM YYYY')
+    ]);
+})->name('syarat-ketentuan');
+
+// routes/web.php
+
+Route::get('/peta-situs', function () {
+    return view('frontend.pages.peta-situs.index');
+})->name('peta-situs');
 
 // LOGIN
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLogin'])->name('login');

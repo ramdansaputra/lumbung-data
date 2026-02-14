@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 
-                <p class="text-slate-300 text-sm leading-relaxed font-medium">
+                <p class="text-slate-300 text-base leading-relaxed font-medium">
                     Website resmi Pemerintah Desa yang berkomitmen melayani masyarakat dengan transparansi, akuntabilitas, dan inovasi digital.
                 </p>
 
@@ -168,9 +168,9 @@
                 </p>
                 
                 <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-                    <a href="#" class="hover:text-white transition">Kebijakan Privasi</a>
-                    <a href="#" class="hover:text-white transition">Syarat & Ketentuan</a>
-                    <a href="#" class="hover:text-white transition">Peta Situs</a>
+                    <a href="{{ route('kebijakan-privasi') }}" class="hover:text-white transition">Kebijakan Privasi</a>
+                    <a href="{{ Route::has('syarat-ketentuan') ? route('syarat-ketentuan') : '#' }}" class="hover:text-white transition">Syarat & Ketentuan</a>
+                    <a href="{{ Route::has('peta-situs') ? route('peta-situs') : '#' }}" class="hover:text-white transition">Peta Situs</a>
                 </div>
             </div>
         </div>

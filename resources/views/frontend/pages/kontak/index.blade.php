@@ -77,7 +77,7 @@
             <div class="lg:w-2/5 order-1 lg:order-2 space-y-8">
                 <div>
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-4">
-                        📞 Layanan Masyarakat
+                        Layanan Masyarakat
                     </div>
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Informasi Kontak</h2>
                     <p class="text-gray-600 leading-relaxed">
@@ -140,7 +140,7 @@
         <x-section-title 
             title="Hubungi Departemen" 
             subtitle="Kontak langsung unit pelayanan spesifik desa."
-            badge="🏢 Unit Kerja"
+            badge="Unit Kerja"
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

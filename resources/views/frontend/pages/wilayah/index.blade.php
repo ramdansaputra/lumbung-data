@@ -19,7 +19,7 @@
         <x-section-title 
             title="Ringkasan Wilayah" 
             subtitle="Data kuantitatif pembagian wilayah administratif desa."
-            badge="📊 Data Statistik"
+            badge="Data Statistik"
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -40,7 +40,7 @@
         <x-section-title 
             title="Daftar Dusun" 
             subtitle="Wilayah administratif tingkat pertama di bawah desa."
-            badge="🏘️ Dusun"
+            badge="Dusun"
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -142,7 +142,7 @@
     <div class="container mx-auto px-4">
         <x-section-title 
             title="Peta Wilayah" 
-            badge="📍 Geografis"
+            badge="Geografis"
         />
 
         <div class="bg-white p-2 rounded-3xl shadow-xl border border-gray-200">
