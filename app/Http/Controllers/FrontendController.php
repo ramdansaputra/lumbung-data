@@ -20,9 +20,6 @@ use App\Models\KategoriKonten;
 
 class FrontendController extends Controller
 {
-    /**
-     * Mengambil Data Identitas Desa (Shared)
-     */
     private function getIdentitasDesa()
     {
         return IdentitasDesa::first() ?? new IdentitasDesa();
@@ -32,7 +29,7 @@ class FrontendController extends Controller
     {
         $identitas = $this->getIdentitasDesa();
 
-        // 1. DATA DESA INFO
+        // 1. PERBAIKAN PATH GAMBAR DESA
         $desaInfo = [
             'nama_desa' => $identitas->nama_desa ?? 'Nama Desa Belum Diisi',
             'kecamatan' => $identitas->kecamatan ?? '-',
@@ -41,40 +38,27 @@ class FrontendController extends Controller
             'email_desa' => $identitas->email_desa ?? '-',
             'telepon_desa' => $identitas->telepon_desa ?? '-',
             'alamat_kantor' => $identitas->alamat_kantor ?? '-',
-            'deskripsi_singkat' => 'Website resmi pemerintah desa yang menyajikan informasi secara transparan dan akuntabel.',
-            'gambar_kantor' => $identitas->gambar_kantor ? asset('storage/' . $identitas->gambar_kantor) : 'https://via.placeholder.com/600x600?text=Kantor+Desa',
-            'logo' => $identitas->logo_desa ? asset('storage/' . $identitas->logo_desa) : null,
+            'deskripsi_singkat' => 'Selamat datang di portal resmi transformasi digital Pemerintah Desa. Kami hadir untuk mendekatkan pelayanan publik melalui akses informasi yang transparan, layanan administrasi surat-menyurat yang cepat dan efisien, serta keterbukaan data pembangunan desa. Mari bersama-sama mewujudkan tata kelola pemerintahan yang modern, akuntabel, dan partisipatif demi kemajuan dan kesejahteraan desa.',
+            
+            // Perbaikan: Tambahkan path 'gambar-kantor/' sesuai struktur upload
+            'gambar_kantor' => ($identitas->gambar_kantor && file_exists(storage_path('app/public/gambar-kantor/' . $identitas->gambar_kantor))) 
+                ? asset('storage/gambar-kantor/' . $identitas->gambar_kantor) 
+                : 'https://via.placeholder.com/600x600?text=Kantor+Desa',
+            
+            // Perbaikan: Tambahkan path 'logo-desa/' sesuai struktur upload
+            'logo' => ($identitas->logo_desa && file_exists(storage_path('app/public/logo-desa/' . $identitas->logo_desa))) 
+                ? asset('storage/logo-desa/' . $identitas->logo_desa) 
+                : null,
         ];
 
-        // 2. STATISTIK
         $statistik = [
-            [
-                'label' => 'Total Penduduk',
-                'value' => Penduduk::where('status_hidup', 'hidup')->count(),
-                'icon' => 'users',
-                'color' => 'emerald'
-            ],
-            [
-                'label' => 'Laki-laki',
-                'value' => Penduduk::where('status_hidup', 'hidup')->where('jenis_kelamin', 'L')->count(),
-                'icon' => 'user',
-                'color' => 'blue'
-            ],
-            [
-                'label' => 'Perempuan',
-                'value' => Penduduk::where('status_hidup', 'hidup')->where('jenis_kelamin', 'P')->count(),
-                'icon' => 'user',
-                'color' => 'rose'
-            ],
-            [
-                'label' => 'Total Keluarga',
-                'value' => Keluarga::count(),
-                'icon' => 'home',
-                'color' => 'amber'
-            ],
+            ['label' => 'Total Penduduk', 'value' => Penduduk::where('status_hidup', 'hidup')->count(), 'icon' => 'users', 'color' => 'emerald'],
+            ['label' => 'Laki-laki', 'value' => Penduduk::where('status_hidup', 'hidup')->where('jenis_kelamin', 'L')->count(), 'icon' => 'user', 'color' => 'blue'],
+            ['label' => 'Perempuan', 'value' => Penduduk::where('status_hidup', 'hidup')->where('jenis_kelamin', 'P')->count(), 'icon' => 'user', 'color' => 'rose'],
+            ['label' => 'Total Keluarga', 'value' => Keluarga::count(), 'icon' => 'home', 'color' => 'amber'],
         ];
 
-        // 3. ARTIKEL TERBARU
+        // 2. PERBAIKAN PATH GAMBAR ARTIKEL
         $artikelQuery = Artikel::latest('created_at')->take(3)->get();
         $artikelTerbaru = $artikelQuery->map(function ($item) {
             return [
@@ -83,29 +67,26 @@ class FrontendController extends Controller
                 'excerpt' => Str::limit(strip_tags($item->deskripsi), 100),
                 'date' => $item->created_at->format('Y-m-d'),
                 'category' => 'Berita',
-                'image' => $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/400x300?text=Berita',
+                // Asumsi: Gambar artikel disimpan di folder 'artikel'
+                'image' => ($item->gambar && file_exists(storage_path('app/public/artikel/' . $item->gambar)))
+                    ? asset('storage/artikel/' . $item->gambar) 
+                    : 'https://via.placeholder.com/400x300?text=Berita',
                 'author' => 'Admin'
             ];
         });
 
-        // 4. PERANGKAT DESA (Untuk Home)
-        $perangkatQuery = DataPerangkatDesa::whereIn('jabatan', ['kades', 'sekdes'])
-            ->where('status', 'aktif')
-            ->get();
-            
+        $perangkatQuery = DataPerangkatDesa::whereIn('jabatan', ['kades', 'sekdes'])->where('status', 'aktif')->get();
         $perangkatUtama = $perangkatQuery->map(function($p) {
             return [
                 'nama' => $p->nama,
                 'posisi' => $this->formatJabatan($p->jabatan),
-                // Gunakan UI Avatar karena kolom foto tidak ada di database perangkat_desa
+                // Gunakan avatar default jika foto perangkat belum ada fiturnya
                 'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=10b981&color=fff&size=500'
             ];
         });
 
-        // 5. DATA APBDES
         $tahunIni = date('Y');
         $totalAnggaran = Apbdes::sum('anggaran'); 
-        
         $sumberDana = Apbdes::join('sumber_dana', 'apbdes.sumber_dana_id', '=', 'sumber_dana.id')
             ->select('sumber_dana.nama_sumber', DB::raw('sum(apbdes.anggaran) as total'))
             ->groupBy('sumber_dana.nama_sumber')
@@ -117,7 +98,6 @@ class FrontendController extends Controller
             'detail' => $sumberDana
         ];
 
-        // 6. AGENDA KEGIATAN
         $agendaTerbaru = DB::table('agenda')
             ->where('tgl_agenda', '>=', now())
             ->orderBy('tgl_agenda', 'asc')
@@ -133,19 +113,23 @@ class FrontendController extends Controller
                 ];
             });
 
-        return view('frontend.pages.home', compact(
-            'desaInfo', 
-            'statistik', 
-            'artikelTerbaru', 
-            'perangkatUtama',
-            'anggaranChart',
-            'agendaTerbaru'
-        ));
+        return view('frontend.pages.home', compact('desaInfo', 'statistik', 'artikelTerbaru', 'perangkatUtama', 'anggaranChart', 'agendaTerbaru'));
     }
 
-    public function berita()
+    public function berita(Request $request)
     {
-        $artikels = Artikel::latest('created_at')->paginate(9);
+        $query = Artikel::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $keyword = $request->search;
+            $query->where(function($q) use ($keyword) {
+                $q->where('nama', 'like', '%' . $keyword . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $artikels = $query->latest('created_at')->paginate(9);
+
         $kategoriBlog = KategoriKonten::where('status', 'aktif')->pluck('nama_kategori', 'slug')->toArray();
         $kategoriBlog = array_merge(['semua' => 'Semua'], $kategoriBlog);
 
@@ -156,7 +140,10 @@ class FrontendController extends Controller
                 'excerpt' => Str::limit(strip_tags($item->deskripsi), 120),
                 'date' => $item->created_at->format('Y-m-d'),
                 'category' => 'Berita',
-                'image' => $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/400x300?text=Berita',
+                // PERBAIKAN PATH GAMBAR ARTIKEL
+                'image' => ($item->gambar && file_exists(storage_path('app/public/artikel/' . $item->gambar)))
+                    ? asset('storage/artikel/' . $item->gambar) 
+                    : 'https://via.placeholder.com/400x300?text=Berita',
                 'author' => 'Admin',
                 'views' => 0, 
             ];
@@ -176,19 +163,25 @@ class FrontendController extends Controller
             'title' => $artikel->nama,
             'content' => $artikel->deskripsi, 
             'date' => $artikel->created_at,
-            'image' => $artikel->gambar ? asset('storage/' . $artikel->gambar) : null,
+            // PERBAIKAN PATH GAMBAR ARTIKEL
+            'image' => ($artikel->gambar && file_exists(storage_path('app/public/artikel/' . $artikel->gambar)))
+                ? asset('storage/artikel/' . $artikel->gambar) 
+                : null,
             'author' => 'Admin',
             'category' => 'Berita'
         ];
 
         $artikelTerbaru = Artikel::latest()->take(4)->get()->map(function($item){
-             return [
+            return [
                 'id' => $item->id,
                 'title' => $item->nama,
-                'image' => $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/100',
+                // PERBAIKAN PATH GAMBAR ARTIKEL
+                'image' => ($item->gambar && file_exists(storage_path('app/public/artikel/' . $item->gambar)))
+                    ? asset('storage/artikel/' . $item->gambar) 
+                    : 'https://via.placeholder.com/100',
                 'views' => 0,
                 'date' => $item->created_at
-             ];
+            ];
         });
 
         return view('frontend.pages.artikel.show', [
@@ -201,7 +194,6 @@ class FrontendController extends Controller
     {
         $identitas = $this->getIdentitasDesa();
 
-        // 1. Profil Utama
         $profil = [
             'nama_desa' => $identitas->nama_desa,
             'kode_desa' => $identitas->kode_desa,
@@ -211,16 +203,19 @@ class FrontendController extends Controller
             'email_desa' => $identitas->email_desa ?? 'Belum diatur',
             'telepon_desa' => $identitas->telepon_desa ?? 'Belum diatur',
             'alamat_kantor' => $identitas->alamat_kantor,
-            'gambar_kantor' => $identitas->gambar_kantor ? asset('storage/' . $identitas->gambar_kantor) : 'https://via.placeholder.com/800x400?text=Foto+Kantor',
+            
+            // PERBAIKAN PATH GAMBAR KANTOR
+            'gambar_kantor' => ($identitas->gambar_kantor && file_exists(storage_path('app/public/gambar-kantor/' . $identitas->gambar_kantor))) 
+                ? asset('storage/gambar-kantor/' . $identitas->gambar_kantor) 
+                : 'https://via.placeholder.com/800x400?text=Foto+Kantor',
+            
             'latitude' => $identitas->latitude,
             'longitude' => $identitas->longitude,
             'link_peta' => $identitas->link_peta ?? "https://www.google.com/maps?q={$identitas->latitude},{$identitas->longitude}&z=15&output=embed",
         ];
 
-        // 2. Deskripsi (Didefinisikan Manual karena tidak ada di DB)
         $deskripsi = "Desa " . ($identitas->nama_desa ?? 'Kami') . " adalah desa yang terletak di Kecamatan " . ($identitas->kecamatan ?? '-') . ", Kabupaten " . ($identitas->kabupaten ?? '-') . ". Desa ini memiliki potensi sumber daya alam dan sumber daya manusia yang unggul.";
 
-        // 3. Statistik Card Kecil
         $infoDesa = [
             ['label' => 'Penduduk', 'value' => Penduduk::where('status_hidup', 'hidup')->count(), 'icon' => 'users'],
             ['label' => 'Keluarga', 'value' => Keluarga::count(), 'icon' => 'home'],
@@ -228,7 +223,6 @@ class FrontendController extends Controller
             ['label' => 'Luas Wilayah', 'value' => ($identitas->luas_wilayah ?? 0) . ' Ha', 'icon' => 'globe'],
         ];
 
-        // 4. Visi Misi
         $visiMisi = [
             'visi' => 'Terwujudnya Desa yang Maju, Mandiri, dan Sejahtera Berlandaskan Gotong Royong.',
             'misi' => [
@@ -239,7 +233,6 @@ class FrontendController extends Controller
             ]
         ];
 
-        // 5. Data Kepala Desa & Perangkat
         $kades = DataPerangkatDesa::where('jabatan', 'kades')->where('status', 'aktif')->first();
         
         $perangkatLain = DataPerangkatDesa::where('jabatan', '!=', 'kades')
@@ -254,7 +247,6 @@ class FrontendController extends Controller
                 ];
             });
 
-        // Mengirimkan variabel $deskripsi agar tidak error
         return view('frontend.pages.profil.index', compact(
             'profil', 
             'deskripsi', 
@@ -278,10 +270,8 @@ class FrontendController extends Controller
 
     public function pemerintahan()
     {
-        // Ambil data perangkat desa yang aktif
         $perangkat = DataPerangkatDesa::where('status', 'aktif')->get();
 
-        // Mapping jabatan enum ke nama yang bagus
         $struktur = [
             [
                 'kategori' => 'Pimpinan Desa',
@@ -317,19 +307,14 @@ class FrontendController extends Controller
             ]
         ];
 
-        // Definisikan variabel array pemerintahan terlebih dahulu
         $pemerintahan = ['struktur' => $struktur];
-        
-        // Definisikan variabel BPD
         $badan_permusyawaratan = []; 
 
-        // Masukkan nama variabelnya saja ke dalam compact
         return view('frontend.pages.pemerintahan.index', compact('pemerintahan', 'badan_permusyawaratan'));
     }
 
     public function dataDesa()
     {
-        // 1. Statistik Kependudukan (Card Utama)
         $statistikPenduduk = [
             ['label' => 'Total Penduduk', 'value' => Penduduk::where('status_hidup', 'hidup')->count(), 'color' => 'emerald', 'icon' => 'users'],
             ['label' => 'Laki-laki', 'value' => Penduduk::where('status_hidup', 'hidup')->where('jenis_kelamin', 'L')->count(), 'color' => 'blue', 'icon' => 'user'],
@@ -337,14 +322,12 @@ class FrontendController extends Controller
             ['label' => 'Total Keluarga', 'value' => Keluarga::count(), 'color' => 'amber', 'icon' => 'home'],
         ];
 
-        // Hitung total penduduk hidup untuk persentase
         $totalPenduduk = Penduduk::where('status_hidup', 'hidup')->count();
 
-        // 2. Statistik Pendidikan (Group by kolom pendidikan)
         $pendidikanData = Penduduk::where('status_hidup', 'hidup')
             ->select('pendidikan', DB::raw('count(*) as total'))
             ->groupBy('pendidikan')
-            ->orderBy('total', 'desc') // Urutkan dari terbanyak
+            ->orderBy('total', 'desc')
             ->get();
         
         $statistikPendidikan = $pendidikanData->map(function($item) use ($totalPenduduk) {
@@ -355,7 +338,6 @@ class FrontendController extends Controller
             ];
         });
 
-        // 3. Statistik Pekerjaan
         $pekerjaanData = Penduduk::where('status_hidup', 'hidup')
             ->select('pekerjaan', DB::raw('count(*) as total'))
             ->groupBy('pekerjaan')
@@ -370,7 +352,6 @@ class FrontendController extends Controller
             ];
         });
 
-        // 4. Aset Desa
         $asetDesa = AsetDesa::where('status', 'aktif')->get()->map(function($item){
             return [
                 'nama' => $item->nama_aset,
@@ -381,7 +362,6 @@ class FrontendController extends Controller
             ];
         });
 
-        // 5. Anggaran Desa (APBDes)
         $tahunIni = date('Y');
         $totalAnggaran = Apbdes::sum('anggaran');
         
@@ -404,7 +384,6 @@ class FrontendController extends Controller
             'sumber_dana' => $sumberDana
         ];
 
-        // 6. Data Agama (Tambahan agar lebih lengkap seperti referensi)
         $agamaData = Penduduk::where('status_hidup', 'hidup')
             ->select('agama', DB::raw('count(*) as total'))
             ->groupBy('agama')
@@ -425,7 +404,7 @@ class FrontendController extends Controller
             'statistikPekerjaan',
             'asetDesa',
             'anggaranDesa',
-            'statistikAgama' // Baru ditambahkan
+            'statistikAgama'
         ));
     }
 
@@ -434,21 +413,22 @@ class FrontendController extends Controller
         $wilayahRecords = Wilayah::all();
 
         $statistik = [
-            ['label' => 'Total Dusun', 'value' => $wilayahRecords->unique('dusun')->count(), 'icon' => 'map'],
-            ['label' => 'Total RW', 'value' => $wilayahRecords->sum('rw'), 'icon' => 'users'], 
-            ['label' => 'Total RT', 'value' => $wilayahRecords->sum('rt'), 'icon' => 'home'], 
-            ['label' => 'Total Penduduk', 'value' => $wilayahRecords->sum('jumlah_penduduk'), 'icon' => 'user'],
+            ['label' => 'Total Dusun', 'value' => $wilayahRecords->unique('dusun')->count(), 'icon' => 'map', 'color' => 'emerald'],
+            ['label' => 'Total RW', 'value' => $wilayahRecords->sum('rw'), 'icon' => 'users', 'color' => 'blue'],
+            ['label' => 'Total RT', 'value' => $wilayahRecords->sum('rt'), 'icon' => 'home', 'color' => 'amber'],
+            ['label' => 'Total Penduduk', 'value' => $wilayahRecords->sum('jumlah_penduduk'), 'icon' => 'user', 'color' => 'rose'],
         ];
 
-        $wilayahList = $wilayahRecords->map(function ($wilayah) {
+        $wilayahList = $wilayahRecords->groupBy('dusun')->map(function ($group) {
+            $first = $group->first();
             return [
-                'id' => $wilayah->id,
-                'nama' => $wilayah->dusun ?? 'Dusun',
-                'deskripsi' => "Wilayah administratif Dusun " . $wilayah->dusun,
-                'kepala_dusun' => $wilayah->ketua_rw ?? 'Belum Ada', 
-                'jumlah_rw' => $wilayah->rw ?? 0,
-                'jumlah_rt' => $wilayah->rt ?? 0,
-                'jumlah_penduduk' => $wilayah->jumlah_penduduk,
+                'id' => $first->id, 
+                'nama' => $first->dusun ?? 'Dusun Tanpa Nama',
+                'deskripsi' => "Wilayah administratif Dusun " . ($first->dusun ?? '') . " yang terdiri dari beberapa RW dan RT.",
+                'kepala_dusun' => $first->ketua_rw ?? 'Belum Ditentukan', 
+                'jumlah_rw' => $group->sum('rw'),
+                'jumlah_rt' => $group->sum('rt'),
+                'jumlah_penduduk' => $group->sum('jumlah_penduduk'),
             ];
         });
 
@@ -472,6 +452,7 @@ class FrontendController extends Controller
             'jam_operasional' => 'Senin - Kamis (08.00 - 16.00), Jumat (08.00 - 14.00)', 
             'latitude' => $identitas->latitude,
             'longitude' => $identitas->longitude,
+            'link_peta' => $identitas->link_peta ?? "https://www.google.com/maps?q={$identitas->latitude},{$identitas->longitude}&z=15&output=embed",
         ];
 
         $departemen = [
@@ -509,5 +490,93 @@ class FrontendController extends Controller
             'kadus' => 'Kepala Dusun'
         ];
         return $map[$kode] ?? ucfirst($kode);
+    }
+
+    // Fungsi FAQ yang sudah Anda tambahkan sebelumnya
+    public function faq()
+    {
+        // Data FAQ Lengkap (Dikelompokkan)
+        $faqs = [
+            'Layanan Administrasi & Surat' => [
+                [
+                    'tanya' => 'Apa saja jenis surat yang bisa diurus di kantor desa?',
+                    'jawab' => 'Kami melayani pembuatan berbagai dokumen administrasi, antara lain: Surat Keterangan Domisili, Surat Keterangan Usaha (SKU), Surat Keterangan Tidak Mampu (SKTM), Surat Pengantar SKCK, Surat Keterangan Kelahiran, Surat Keterangan Kematian, Surat Keterangan Janda/Duda, dan Surat Pengantar Nikah (N1-N4).'
+                ],
+                [
+                    'tanya' => 'Apakah bisa mengurus surat secara online melalui website ini?',
+                    'jawab' => 'Ya, website ini dilengkapi fitur Layanan Mandiri. Warga yang NIK-nya sudah terdaftar dapat mengajukan permohonan surat melalui menu "Layanan Surat" (Login diperlukan), mengisi formulir yang dibutuhkan, dan memantau status suratnya hingga siap diambil.'
+                ],
+                [
+                    'tanya' => 'Berapa lama proses pembuatan surat?',
+                    'jawab' => 'Untuk permohonan langsung di kantor, proses estimasi 10-15 menit jika berkas lengkap dan pejabat penandatangan ada di tempat. Untuk permohonan online, maksimal 1x24 jam pada hari kerja.'
+                ],
+                [
+                    'tanya' => 'Apakah ada biaya untuk pembuatan surat?',
+                    'jawab' => 'Tidak ada. Seluruh layanan administrasi kependudukan dan surat-menyurat di Pemerintah Desa Serayu Larangan tidak dipungut biaya (GRATIS).'
+                ],
+                [
+                    'tanya' => 'Dokumen apa yang harus dibawa saat mengurus surat?',
+                    'jawab' => 'Secara umum, Anda wajib membawa KTP asli dan Kartu Keluarga (KK) asli/fotokopi. Untuk surat khusus (seperti surat tanah, nikah, dll), mungkin diperlukan dokumen pendukung lain seperti PBB, surat pengantar RT/RW, atau akta cerai.'
+                ]
+            ],
+            'Bantuan Sosial (Bansos)' => [
+                [
+                    'tanya' => 'Apa saja bantuan sosial yang dikelola oleh desa?',
+                    'jawab' => 'Desa mengelola Bantuan Langsung Tunai (BLT) Dana Desa. Selain itu, desa juga memfasilitasi pendataan dan verifikasi untuk bantuan dari pemerintah pusat/daerah seperti PKH (Program Keluarga Harapan), BPNT (Sembako), dan BST.'
+                ],
+                [
+                    'tanya' => 'Bagaimana cara mendaftar agar mendapatkan bantuan?',
+                    'jawab' => 'Pengusulan data penerima bantuan dilakukan melalui Musyawarah Dusun (Musdus) yang kemudian diputuskan dalam Musyawarah Desa (Musdes). Jika Anda merasa layak namun belum terdata, silakan lapor ke Ketua RT/RW setempat untuk diusulkan dalam musyawarah berikutnya.'
+                ],
+                [
+                    'tanya' => 'Bagaimana cara mengecek apakah saya terdaftar sebagai penerima bantuan?',
+                    'jawab' => 'Anda dapat mengecek daftar penerima bantuan melalui menu "Data Desa" atau "Transparansi" di website ini, atau mengecek langsung di papan pengumuman Balai Desa. Anda juga bisa mengecek di situs cekbansos.kemensos.go.id.'
+                ]
+            ],
+            'Sistem Website Desa' => [
+                [
+                    'tanya' => 'Apa fungsi utama website desa ini?',
+                    'jawab' => 'Website ini berfungsi sebagai: 1. Pusat Informasi (Berita, Pengumuman, Agenda). 2. Media Transparansi (APBDes, Data Penduduk). 3. Sarana Pelayanan Publik (Layanan Surat Online, Pengaduan Masyarakat). 4. Promosi Potensi Desa.'
+                ],
+                [
+                    'tanya' => 'Bagaimana cara mendapatkan akun untuk Login Warga?',
+                    'jawab' => 'Untuk keamanan data, pendaftaran akun Layanan Mandiri dilakukan secara manual. Silakan datang ke kantor desa membawa KTP dan KK untuk didaftarkan NIK-nya oleh operator desa agar bisa mengakses fitur khusus warga.'
+                ],
+                [
+                    'tanya' => 'Apakah data penduduk di website ini aman?',
+                    'jawab' => 'Ya, kami sangat menjaga privasi data. Data yang ditampilkan di halaman publik ("Data Desa") hanya berupa statistik agregat (jumlah/angka) tanpa menampilkan nama dan alamat rinci (by name by address), kecuali untuk data pejabat atau penerima bantuan yang diwajibkan oleh aturan transparansi.'
+                ],
+                [
+                    'tanya' => 'Saya lupa PIN/Password akun saya, apa yang harus dilakukan?',
+                    'jawab' => 'Silakan hubungi admin desa melalui nomor WhatsApp yang tertera di menu "Kontak" untuk melakukan reset PIN/Password.'
+                ]
+            ],
+            'Pengaduan & Aspirasi' => [
+                [
+                    'tanya' => 'Saya punya usulan pembangunan atau keluhan pelayanan, lapor kemana?',
+                    'jawab' => 'Anda bisa menyampaikan aspirasi atau pengaduan melalui menu "Kontak" di website ini (isi formulir pengaduan). Anda juga bisa menyampaikannya secara langsung melalui Ketua RT/RW atau datang ke kantor desa.'
+                ],
+                [
+                    'tanya' => 'Apakah identitas pelapor akan dirahasiakan?',
+                    'jawab' => 'Ya, kami menjamin kerahasiaan identitas pelapor jika Anda meminta untuk dirahasiakan, terutama untuk pengaduan yang bersifat sensitif.'
+                ],
+                [
+                    'tanya' => 'Berapa lama pengaduan akan direspon?',
+                    'jawab' => 'Setiap pengaduan yang masuk melalui website akan diverifikasi oleh admin dalam waktu 1x24 jam dan diteruskan ke perangkat desa terkait untuk ditindaklanjuti sesegera mungkin.'
+                ]
+            ],
+            'Informasi Umum' => [
+                [
+                    'tanya' => 'Jam berapa pelayanan kantor desa buka?',
+                    'jawab' => 'Senin - Kamis: 08.00 - 16.00 WIB. Jumat: 08.00 - 14.00 WIB. Sabtu, Minggu, dan Hari Libur Nasional: Tutup.'
+                ],
+                [
+                    'tanya' => 'Dimana lokasi kantor desa?',
+                    'jawab' => 'Lokasi kantor desa dapat dilihat pada peta di menu "Wilayah" atau "Kontak". Alamat lengkap juga tersedia di bagian bawah (footer) website ini.'
+                ]
+            ]
+        ];
+
+        return view('frontend.pages.faq.index', compact('faqs'));
     }
 }

@@ -116,7 +116,7 @@
     </div>
 </section>
 
-<section class="py-20 bg-emerald-900 relative overflow-hidden">
+<section class="py-20 bg-emerald-700 relative overflow-hidden">
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
     <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-12">

@@ -5,63 +5,96 @@
 
 @section('content')
 
-<div class="relative bg-emerald-900 pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
-    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-    <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-teal-500 rounded-full blur-3xl opacity-20"></div>
+<div class="relative bg-emerald-900 overflow-hidden lg:min-h-[85vh] flex items-center pt-24 pb-24 lg:pt-32 lg:pb-32 group">
+    
+    {{-- 1. BACKGROUND IMAGE LAYER --}}
+    @if(isset($desaInfo['gambar_kantor']))
+        <div class="absolute inset-0 z-0">
+            <img src="{{ $desaInfo['gambar_kantor'] }}" 
+                alt="Background Desa" 
+                class="w-full h-full object-cover opacity-60 scale-105 group-hover:scale-110 transition-transform duration-[3s]">
+        </div>
+    @endif
 
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+    {{-- 2. GRADIENT OVERLAY LAYER --}}
+    {{-- Ini adalah lapisan warna di atas foto agar teks tetap kontras --}}
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-950/95 via-emerald-900/90 to-teal-900/80 z-0"></div>
+
+    {{-- 3. PATTERN LAYER --}}
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay z-0"></div>
+    
+    {{-- 4. DEKORASI BLUR/GLOW --}}
+    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-emerald-500 rounded-full blur-[120px] opacity-20 animate-pulse z-0"></div>
+    <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-teal-500 rounded-full blur-[100px] opacity-20 z-0"></div>
+
+    {{-- KONTEN UTAMA --}}
+    <div class="container mx-auto px-4 relative z-10 h-full flex flex-col justify-center">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             
+            {{-- KIRI: TEKS --}}
             <div class="lg:w-1/2 text-center lg:text-left">
-                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-800/50 border border-emerald-700 text-emerald-100 text-sm font-medium mb-6 animate-fade-in shadow-sm">
-                    <span class="relative flex h-3 w-3">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-800/40 border border-emerald-700/50 text-emerald-100 text-xs font-semibold uppercase tracking-wider mb-6 animate-fade-in shadow-sm backdrop-blur-sm">
+                    <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                     </span>
                     <span>Website Resmi Pemerintah Desa</span>
                 </div>
 
-                <h1 class="text-4xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                <h1 class="text-4xl lg:text-6xl font-bold text-white leading-tight mb-6 tracking-tight drop-shadow-sm">
                     Membangun Desa <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-200">
                         {{ $desaInfo['nama_desa'] ?? 'Maju & Mandiri' }}
                     </span>
                 </h1>
                 
-                <p class="text-lg text-emerald-100 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                    {{ $desaInfo['deskripsi_singkat'] ?? 'Selamat datang di portal pelayanan publik digital. Akses data kependudukan, berita terkini, dan layanan surat menyurat dengan transparansi penuh.' }}
+                <p class="text-lg text-emerald-100/90 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
+                    {{ $desaInfo['deskripsi_singkat'] ?? 'Selamat datang di portal resmi transformasi digital Pemerintah Desa Serayu Larangan. Kami hadir untuk mendekatkan pelayanan publik melalui akses informasi yang transparan, layanan administrasi surat-menyurat yang cepat dan efisien, serta keterbukaan data pembangunan desa. Mari bersama-sama mewujudkan tata kelola pemerintahan yang modern, akuntabel, dan partisipatif demi kemajuan dan kesejahteraan seluruh masyarakat desa.' }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                    <a href="{{ route('profil') }}" class="group relative px-8 py-3.5 bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all duration-300 hover:-translate-y-1 w-full sm:w-auto flex justify-center">
+                    <a href="{{ route('profil') }}" class="group relative px-8 py-4 bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 hover:shadow-emerald-500/50 transition-all duration-300 hover:-translate-y-1 w-full sm:w-auto flex justify-center">
                         <span class="flex items-center gap-2">
                             Jelajahi Profil
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </span>
                     </a>
-                    <a href="{{ route('kontak') }}" class="px-8 py-3.5 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm flex items-center justify-center gap-2 w-full sm:w-auto">
+                    <a href="{{ route('kontak') }}" class="px-8 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm flex items-center justify-center gap-2 w-full sm:w-auto">
                         Hubungi Kami
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <svg class="w-5 h-5 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     </a>
                 </div>
             </div>
 
-            <div class="lg:w-1/2 relative hidden md:block">
-                <div class="relative w-full aspect-square max-w-lg mx-auto">
-                    <div class="absolute inset-4 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/50 border-4 border-emerald-500/20 z-10 rotate-3 hover:rotate-0 transition duration-700 ease-out group bg-gray-800">
-                        <img src="{{ $desaInfo['gambar_kantor'] }}" alt="Kantor Desa" class="w-full h-full object-cover scale-110 group-hover:scale-100 transition duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 to-transparent"></div>
+            {{-- KANAN: GAMBAR UTAMA --}}
+            <div class="lg:w-1/2 relative hidden lg:block">
+                <div class="relative w-full aspect-[4/3] max-w-xl mx-auto transform hover:scale-[1.02] transition duration-700 ease-out">
+                    
+                    {{-- Bingkai Foto Utama --}}
+                    <div class="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl shadow-emerald-900/60 border border-white/10 z-10 bg-gray-800">
+                        <img src="{{ $desaInfo['gambar_kantor'] }}" alt="Kantor Desa" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-700">
                         
-                        <div class="absolute bottom-8 left-8 text-white">
-                            <p class="text-sm font-medium text-emerald-300 uppercase tracking-widest mb-1">Kantor Kepala Desa</p>
-                            <p class="font-bold text-lg">{{ $desaInfo['alamat_kantor'] }}</p>
+                        {{-- Overlay Gradient Internal Foto --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-transparent to-transparent"></div>
+                        
+                        {{-- Info Lokasi (Floating Bottom) --}}
+                        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                            <div class="flex items-start gap-4">
+                                <div class="p-3 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 rounded-xl">
+                                    <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-1">Kantor Kepala Desa</p>
+                                    <p class="font-bold text-lg leading-tight text-white shadow-sm">{{ $desaInfo['alamat_kantor'] }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="absolute -top-4 -left-4 z-20 bg-white p-4 rounded-2xl shadow-xl shadow-emerald-900/20 border border-emerald-50 animate-float-slow max-w-[200px]">
+                    {{-- Floating Widget 1 (Kiri Atas) --}}
+                    <div class="absolute -top-6 -left-8 z-20 bg-white/95 backdrop-blur rounded-2xl p-4 shadow-xl shadow-emerald-900/20 border border-white/50 animate-float-slow max-w-[200px]">
                         <div class="flex items-center gap-3">
-                            <div class="p-2.5 bg-blue-50 rounded-lg text-blue-600">
+                            <div class="p-2.5 bg-blue-50 rounded-xl text-blue-600">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             </div>
                             <div>
@@ -71,9 +104,10 @@
                         </div>
                     </div>
 
-                    <div class="absolute bottom-0 -right-4 z-20 bg-white p-4 rounded-2xl shadow-xl shadow-emerald-900/20 border border-emerald-50 animate-float-delayed max-w-[220px]">
+                    {{-- Floating Widget 2 (Kanan Bawah) --}}
+                    <div class="absolute -bottom-6 -right-8 z-20 bg-white/95 backdrop-blur rounded-2xl p-4 shadow-xl shadow-emerald-900/20 border border-white/50 animate-float-delayed max-w-[200px]">
                         <div class="flex items-center gap-3">
-                            <div class="p-2.5 bg-emerald-50 rounded-lg text-emerald-600">
+                            <div class="p-2.5 bg-emerald-50 rounded-xl text-emerald-600">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <div>
@@ -82,41 +116,53 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="relative -mt-20 z-30 container mx-auto px-4">
-    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:p-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            @forelse($statistik as $stat)
-                @php
-                    // MAPPING ICON: Mengubah text dari database menjadi SVG
-                    $iconSvg = match($stat['icon']) {
-                        'users' => '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>',
-                        'user' => '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
-                        'home' => '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
-                        default => '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>'
-                    };
-                @endphp
+<div class="relative -mt-24 z-20 container mx-auto px-4 mb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        @forelse($statistik as $index => $stat)
+            @php
+                // Logika Warna Berbeda-beda Sesuai Urutan (Hijau, Biru, Kuning, Ungu)
+                $colors = ['emerald', 'blue', 'amber', 'purple'];
+                $currentColor = $colors[$index % 4]; 
+                
+                // Unit label tambahan (opsional, disesuaikan dengan jenis data)
+                $unitLabel = match(strtolower($stat['label'])) {
+                    'total penduduk' => 'Jiwa',
+                    'laki-laki' => 'Jiwa',
+                    'perempuan' => 'Jiwa',
+                    'total keluarga' => 'KK',
+                    default => ''
+                };
 
-                <x-stat-card 
-                    :label="$stat['label']"
-                    :value="$stat['value']"
-                    :icon="$iconSvg"
-                    :color="$stat['color'] ?? 'emerald'"
-                />
-            @empty
-                <div class="col-span-4 text-center py-8">
-                    <div class="inline-flex justify-center items-center w-12 h-12 rounded-full bg-gray-100 text-gray-400 mb-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                    </div>
-                    <p class="text-gray-500 font-medium">Data statistik sedang diproses...</p>
-                </div>
-            @endforelse
-        </div>
+                // Icon SVG
+                $iconSvg = match($stat['icon']) {
+                    'users' => '<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>',
+                    'user' => '<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
+                    'home' => '<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
+                    default => '<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>'
+                };
+            @endphp
+
+            <x-stat-card 
+                :label="$stat['label']"
+                :value="$stat['value']"
+                :icon="$iconSvg"
+                :color="$currentColor"
+                :unit="$unitLabel"
+            />
+        @empty
+            <div class="col-span-4 text-center py-6 text-slate-400 font-medium bg-white rounded-3xl shadow-sm">
+                Data statistik belum tersedia.
+            </div>
+        @endforelse
+
     </div>
 </div>
 

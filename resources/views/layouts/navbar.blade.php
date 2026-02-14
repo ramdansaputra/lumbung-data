@@ -1,21 +1,27 @@
+@php
+    // Ambil data identitas desa langsung di view agar selalu dinamis
+    $identitas_nav = \App\Models\IdentitasDesa::first();
+@endphp
+
 <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100 transition-all duration-300">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
             
             <div class="flex-shrink-0 flex items-center gap-3">
-                @if(config('app.logo'))
-                    <img src="{{ config('app.logo') }}" alt="Logo Desa" class="h-10 w-10 object-contain drop-shadow-sm">
+                @if($identitas_nav && $identitas_nav->logo_desa && file_exists(storage_path('app/public/logo-desa/'.$identitas_nav->logo_desa)))
+                    <img src="{{ asset('storage/logo-desa/'.$identitas_nav->logo_desa) }}" alt="Logo Desa" class="h-10 w-10 object-contain drop-shadow-sm">
                 @else
                     <div class="h-10 w-10 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                     </div>
                 @endif
+                
                 <div class="flex flex-col">
                     <h1 class="text-lg font-bold text-slate-800 leading-tight tracking-tight">
-                        {{ config('app.village_name', 'Pemerintah Desa') }}
+                        {{ $identitas_nav->nama_desa ?? config('app.name', 'Pemerintah Desa') }}
                     </h1>
                     <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">
-                        {{ config('app.district', 'Kecamatan') }}
+                        Kec. {{ $identitas_nav->kecamatan ?? 'Kecamatan' }}
                     </span>
                 </div>
             </div>
@@ -47,7 +53,7 @@
                     <span class="absolute bottom-0 left-0 h-0.5 bg-emerald-600 transition-all duration-300 {{ request()->routeIs('wilayah') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                 </a>
 
-                <a href="{{ route('artikel') }}" class="text-sm font-medium transition duration-300 relative group py-2 {{ request()->routeIs('artikel*') ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600' }}">
+                <a href="{{ route('berita') }}" class="text-sm font-medium transition duration-300 relative group py-2 {{ request()->routeIs('artikel*') ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600' }}">
                     Berita
                     <span class="absolute bottom-0 left-0 h-0.5 bg-emerald-600 transition-all duration-300 {{ request()->routeIs('artikel*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                 </a>

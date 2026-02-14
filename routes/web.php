@@ -97,6 +97,9 @@ Route::get('/syarat-ketentuan', function () {
     ]);
 })->name('syarat-ketentuan');
 
+// FAQ
+Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
+
 // routes/web.php
 
 Route::get('/peta-situs', function () {
