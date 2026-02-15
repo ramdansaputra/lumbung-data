@@ -430,22 +430,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | KESEHATAN
     |--------------------------------------------------------------------------
     */
-    // Pendataan Kesehatan
-    Route::get('/kesehatan/pendataan', [App\Http\Controllers\Admin\KesehatanController::class, 'pendataan'])->name('kesehatan.pendataan');
-    Route::get('/kesehatan/pendataan/create', [App\Http\Controllers\Admin\KesehatanController::class, 'createPendataan'])->name('kesehatan.pendataan.create');
-    Route::get('/kesehatan/pendataan/{id}/edit', [App\Http\Controllers\Admin\KesehatanController::class, 'editPendataan'])->name('kesehatan.pendataan.edit');
-    Route::post('/kesehatan/pendataan', [App\Http\Controllers\Admin\KesehatanController::class, 'storePendataan'])->name('kesehatan.pendataan.store');
-    Route::put('/kesehatan/pendataan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'updatePendataan'])->name('kesehatan.pendataan.update');
-    Route::delete('/kesehatan/pendataan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'destroyPendataan'])->name('kesehatan.pendataan.destroy');
-
-    Route::get('/kesehatan/pemantauan', [App\Http\Controllers\Admin\KesehatanController::class, 'pemantauan'])->name('kesehatan.pemantauan');
-    Route::get('/kesehatan/pemantauan/create', [App\Http\Controllers\Admin\KesehatanController::class, 'createPemantauan'])->name('kesehatan.pemantauan.create');
-    Route::get('/kesehatan/pemantauan/{id}/edit', [App\Http\Controllers\Admin\KesehatanController::class, 'editPemantauan'])->name('kesehatan.pemantauan.edit');
-    Route::post('/kesehatan/pemantauan', [App\Http\Controllers\Admin\KesehatanController::class, 'storePemantauan'])->name('kesehatan.pemantauan.store');
-    Route::put('/kesehatan/pemantauan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'updatePemantauan'])->name('kesehatan.pemantauan.update');
-    Route::delete('/kesehatan/pemantauan/{id}', [App\Http\Controllers\Admin\KesehatanController::class, 'destroyPemantauan'])->name('kesehatan.pemantauan.destroy');
-    Route::get('/kesehatan/vaksin', [App\Http\Controllers\Admin\KesehatanController::class, 'vaksin'])->name('kesehatan.vaksin');
-    Route::get('/kesehatan/stunting', [App\Http\Controllers\Admin\KesehatanController::class, 'stunting'])->name('kesehatan.stunting');
+    // Include routes/kesehatan.php for dedicated kesehatan controllers
+    require __DIR__.'/kesehatan.php';
 
     /*
     |--------------------------------------------------------------------------

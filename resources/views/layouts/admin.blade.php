@@ -413,8 +413,8 @@
                             </svg>
                         </button>
                         <div class="submenu mt-1 ml-4 space-y-1" :class="{ 'open': kesehatan }">
-                            <a href="/admin/kesehatan/pendataan"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kesehatan.pendataan') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="/admin/kesehatan/pendataan/posyandu"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->is('admin/kesehatan/pendataan*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Pendataan</span>
                             </a>
@@ -428,8 +428,8 @@
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Vaksin</span>
                             </a>
-                            <a href="/admin/kesehatan/stunting"
-                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.kesehatan.stunting') ? 'bg-white/15 text-white' : '' }}">
+                            <a href="/admin/kesehatan/stunting/posyandu"
+                                class="menu-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white {{ request()->is('admin/kesehatan/stunting*') ? 'bg-white/15 text-white' : '' }}">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0"></span>
                                 <span class="menu-text whitespace-nowrap">Stunting</span>
                             </a>
