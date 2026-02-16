@@ -14,6 +14,8 @@ class Kia extends Model {
     protected $fillable = [
         'no_register',
         'posyandu_id',
+        'penduduk_id_ibu',
+        'penduduk_id_anak',
         'nik_ibu',
         'nama_ibu',
         'tgl_lahir_ibu',
@@ -22,6 +24,8 @@ class Kia extends Model {
         'dusun',
         'rt',
         'rw',
+        'wilayah_id',
+        'user_id',
         'no_hp',
         'kehamilan_ke',
         'hpht',
@@ -42,20 +46,39 @@ class Kia extends Model {
     ];
 
     protected $casts = [
-        'tgl_lahir_ibu' => 'date',
-        'hpht' => 'date',
-        'taksiran_lahir' => 'date',
+        'tgl_lahir_ibu'      => 'date',
+        'hpht'               => 'date',
+        'taksiran_lahir'     => 'date',
         'tanggal_melahirkan' => 'date',
-        'tgl_lahir_anak' => 'date',
-        'berat_lahir' => 'decimal:2',
-        'panjang_lahir' => 'decimal:2',
-        'kehamilan_ke' => 'integer',
-        'umur_ibu' => 'integer',
+        'tgl_lahir_anak'     => 'date',
+        'berat_lahir'        => 'decimal:2',
+        'panjang_lahir'      => 'decimal:2',
+        'kehamilan_ke'       => 'integer',
+        'umur_ibu'           => 'integer',
     ];
 
-    // Relasi
+    // ==================
+    // RELASI
+    // ==================
+
     public function posyandu() {
         return $this->belongsTo(Posyandu::class);
+    }
+
+    public function ibu() {
+        return $this->belongsTo(Penduduk::class, 'penduduk_id_ibu');
+    }
+
+    public function anak() {
+        return $this->belongsTo(Penduduk::class, 'penduduk_id_anak');
+    }
+
+    public function wilayah() {
+        return $this->belongsTo(Wilayah::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     public function pemantauanBumil() {
@@ -70,7 +93,10 @@ class Kia extends Model {
         return $this->hasMany(StuntingScorecard::class);
     }
 
-    // Scope
+    // ==================
+    // SCOPE
+    // ==================
+
     public function scopeHamil($query) {
         return $query->where('status_kehamilan', 'hamil');
     }
@@ -83,15 +109,10 @@ class Kia extends Model {
         return $query->whereNotNull('nama_anak');
     }
 
-    // Generate no register otomatis
-    public static function generateNoRegister(): string {
-        $tahun = date('Y');
-        $bulan = date('m');
-        $lastId = self::withTrashed()->whereYear('created_at', $tahun)->count() + 1;
-        return 'KIA/' . $tahun . '/' . $bulan . '/' . str_pad($lastId, 4, '0', STR_PAD_LEFT);
-    }
+    // ==================
+    // ACCESSOR
+    // ==================
 
-    // Accessor
     public function getUmurAnakBulanAttribute(): ?int {
         if (!$this->tgl_lahir_anak) return null;
         return (int) $this->tgl_lahir_anak->diffInMonths(now());
@@ -101,7 +122,18 @@ class Kia extends Model {
         return match ($this->status_resiko) {
             'resiko_tinggi' => 'Risiko Tinggi',
             'resiko_rendah' => 'Risiko Rendah',
-            default => 'Normal',
+            default         => 'Normal',
         };
+    }
+
+    // ==================
+    // STATIC HELPER
+    // ==================
+
+    public static function generateNoRegister(): string {
+        $tahun  = date('Y');
+        $bulan  = date('m');
+        $lastId = self::withTrashed()->whereYear('created_at', $tahun)->count() + 1;
+        return 'KIA/' . $tahun . '/' . $bulan . '/' . str_pad($lastId, 4, '0', STR_PAD_LEFT);
     }
 }

@@ -13,6 +13,7 @@ class Vaksin extends Model {
 
     protected $fillable = [
         'nik',
+        'penduduk_id',
         'nama_penerima',
         'jenis_kelamin',
         'tgl_lahir',
@@ -20,6 +21,8 @@ class Vaksin extends Model {
         'dusun',
         'rt',
         'rw',
+        'wilayah_id',
+        'user_id',
         'alamat',
         'jenis_vaksin',
         'kategori_vaksin',
@@ -34,13 +37,32 @@ class Vaksin extends Model {
     ];
 
     protected $casts = [
-        'tgl_lahir' => 'date',
+        'tgl_lahir'      => 'date',
         'tanggal_vaksin' => 'date',
-        'dosis' => 'integer',
-        'umur' => 'integer',
+        'dosis'          => 'integer',
+        'umur'           => 'integer',
     ];
 
-    // Scopes
+    // ==================
+    // RELASI
+    // ==================
+
+    public function penduduk() {
+        return $this->belongsTo(Penduduk::class);
+    }
+
+    public function wilayah() {
+        return $this->belongsTo(Wilayah::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    // ==================
+    // SCOPE
+    // ==================
+
     public function scopeSudahVaksin($query) {
         return $query->where('status', 'sudah');
     }
@@ -49,21 +71,20 @@ class Vaksin extends Model {
         return $query->where('status', 'belum');
     }
 
-    public function scopeByDusun($query, string $dusun) {
-        return $query->where('dusun', $dusun);
-    }
-
     public function scopeByJenisVaksin($query, string $jenis) {
         return $query->where('jenis_vaksin', $jenis);
     }
 
-    // Accessor
-    public function getDosiLabelAttribute(): string {
+    // ==================
+    // ACCESSOR
+    // ==================
+
+    public function getDosisLabelAttribute(): string {
         return match ($this->dosis) {
-            1 => 'Dosis 1',
-            2 => 'Dosis 2',
-            3 => 'Dosis 3',
-            4 => 'Booster',
+            1       => 'Dosis 1',
+            2       => 'Dosis 2',
+            3       => 'Dosis 3',
+            4       => 'Booster',
             default => 'Dosis ' . $this->dosis,
         };
     }

@@ -17,6 +17,7 @@ class Posyandu extends Model {
         'alamat',
         'rt',
         'rw',
+        'wilayah_id',
         'hari_kegiatan',
         'jam_mulai',
         'jam_selesai',
@@ -30,7 +31,14 @@ class Posyandu extends Model {
         'jumlah_kader' => 'integer',
     ];
 
-    // Relasi
+    // ==================
+    // RELASI
+    // ==================
+
+    public function wilayah() {
+        return $this->belongsTo(Wilayah::class);
+    }
+
     public function kia() {
         return $this->hasMany(Kia::class);
     }
@@ -43,12 +51,18 @@ class Posyandu extends Model {
         return $this->hasMany(PemantauanAnak::class);
     }
 
-    // Scope
+    // ==================
+    // SCOPE
+    // ==================
+
     public function scopeAktif($query) {
         return $query->where('status_posyandu', 'aktif');
     }
 
-    // Accessor
+    // ==================
+    // ACCESSOR
+    // ==================
+
     public function getStatusLabelAttribute(): string {
         return $this->status_posyandu === 'aktif' ? 'Aktif' : 'Tidak Aktif';
     }

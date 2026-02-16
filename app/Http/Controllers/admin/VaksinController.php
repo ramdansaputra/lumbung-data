@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penduduk;
 use App\Models\Vaksin;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -10,11 +11,10 @@ use Illuminate\Support\Arr;
 use Illuminate\View\View;
 
 class VaksinController extends Controller {
-    // Daftar jenis vaksin yang tersedia
     private array $jenisVaksin = [
-        'covid19'       => ['Sinovac', 'Pfizer', 'Moderna', 'AstraZeneca', 'Janssen', 'Sinopharm'],
+        'covid19'        => ['Sinovac', 'Pfizer', 'Moderna', 'AstraZeneca', 'Janssen', 'Sinopharm'],
         'imunisasi_anak' => ['BCG', 'DPT-HB-Hib', 'Polio', 'Campak', 'MMR', 'Hepatitis B', 'PCV'],
-        'lainnya'       => ['Influenza', 'Typhoid', 'Hepatitis A', 'Meningitis'],
+        'lainnya'        => ['Influenza', 'Typhoid', 'Hepatitis A', 'Meningitis'],
     ];
 
     public function index(Request $request): View {
@@ -30,50 +30,46 @@ class VaksinController extends Controller {
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
         if ($request->filled('jenis_vaksin')) {
             $query->where('jenis_vaksin', $request->jenis_vaksin);
         }
-
-        if ($request->filled('dusun')) {
-            $query->where('dusun', $request->dusun);
-        }
-
         if ($request->filled('kategori')) {
             $query->where('kategori_vaksin', $request->kategori);
         }
 
-        // Filter rentang umur
-        if ($request->filled('umur_min')) {
-            $query->where('umur', '>=', $request->umur_min);
-        }
-        if ($request->filled('umur_max')) {
-            $query->where('umur', '<=', $request->umur_max);
-        }
-
         $vaksin = $query->orderBy('tanggal_vaksin', 'desc')->paginate(15)->withQueryString();
 
-        // Statistik ringkas
         $stats = [
-            'sudah'  => Vaksin::where('status', 'sudah')->count(),
-            'belum'  => Vaksin::where('status', 'belum')->count(),
-            'tunda'  => Vaksin::where('status', 'tunda')->count(),
-            'total'  => Vaksin::count(),
+            'sudah' => Vaksin::where('status', 'sudah')->count(),
+            'belum' => Vaksin::where('status', 'belum')->count(),
+            'tunda' => Vaksin::where('status', 'tunda')->count(),
+            'total' => Vaksin::count(),
         ];
 
-        $dusunList = Vaksin::distinct()->pluck('dusun')->filter()->sort()->values();
+        $dusunList       = Vaksin::distinct()->pluck('dusun')->filter()->sort()->values();
         $jenisVaksinList = Vaksin::distinct()->pluck('jenis_vaksin')->filter()->sort()->values();
 
-        return view('admin.kesehatan.vaksin.index', compact('vaksin', 'stats', 'dusunList', 'jenisVaksinList'));
+        return view(
+            'admin.kesehatan.vaksin.index',
+            compact('vaksin', 'stats', 'dusunList', 'jenisVaksinList')
+        );
     }
 
-public function create(): View {
+    public function create(): View {
         $jenisVaksinOptions = Arr::flatten($this->jenisVaksin);
-        return view('admin.kesehatan.vaksin.form', ['jenisVaksinOptions' => $jenisVaksinOptions]);
+        $pendudukList       = Penduduk::where('status_hidup', 'hidup')
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'nik', 'tanggal_lahir', 'jenis_kelamin']);
+
+        return view(
+            'admin.kesehatan.vaksin.form',
+            compact('jenisVaksinOptions', 'pendudukList')
+        );
     }
 
     public function store(Request $request): RedirectResponse {
         $validated = $request->validate([
+            'penduduk_id'      => 'nullable|exists:penduduk,id',
             'nik'              => 'nullable|string|max:20',
             'nama_penerima'    => 'required|string|max:100',
             'jenis_kelamin'    => 'nullable|in:L,P',
@@ -101,13 +97,27 @@ public function create(): View {
             ->with('success', 'Data vaksin berhasil ditambahkan.');
     }
 
-public function edit(Vaksin $vaksin): View {
+    public function show(Vaksin $vaksin): View {
+        $vaksin->load(['penduduk', 'wilayah', 'user']);
+
+        return view('admin.kesehatan.vaksin.show', compact('vaksin'));
+    }
+
+    public function edit(Vaksin $vaksin): View {
         $jenisVaksinOptions = Arr::flatten($this->jenisVaksin);
-        return view('admin.kesehatan.vaksin.form', ['vaksin' => $vaksin, 'jenisVaksinOptions' => $jenisVaksinOptions]);
+        $pendudukList       = Penduduk::where('status_hidup', 'hidup')
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'nik', 'tanggal_lahir', 'jenis_kelamin']);
+
+        return view(
+            'admin.kesehatan.vaksin.form',
+            compact('vaksin', 'jenisVaksinOptions', 'pendudukList')
+        );
     }
 
     public function update(Request $request, Vaksin $vaksin): RedirectResponse {
         $validated = $request->validate([
+            'penduduk_id'      => 'nullable|exists:penduduk,id',
             'nik'              => 'nullable|string|max:20',
             'nama_penerima'    => 'required|string|max:100',
             'jenis_kelamin'    => 'nullable|in:L,P',
@@ -137,11 +147,8 @@ public function edit(Vaksin $vaksin): View {
 
     public function destroy(Vaksin $vaksin): RedirectResponse {
         $vaksin->delete();
+
         return redirect()->route('admin.kesehatan.vaksin.index')
             ->with('success', 'Data vaksin berhasil dihapus.');
-    }
-
-    public function show(Vaksin $vaksin): View {
-        return view('admin.kesehatan.vaksin.show', compact('vaksin'));
     }
 }

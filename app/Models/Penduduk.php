@@ -30,30 +30,58 @@ class Penduduk extends Model {
         'tanggal_lahir' => 'date',
     ];
 
-    // Many-to-many relationship with Keluarga via keluarga_anggota pivot
-    public function keluargas() {
-        return $this->belongsToMany(Keluarga::class, 'keluarga_anggota')
-                    ->withPivot('hubungan_keluarga')
-                    ->withTimestamps();
-    }
-
-    // Many-to-many relationship with RumahTangga via rumah_tangga_penduduk pivot
-    public function rumahTanggas() {
-        return $this->belongsToMany(RumahTangga::class, 'rumah_tangga_penduduk')
-                    ->withPivot('hubungan_rumah_tangga')
-                    ->withTimestamps();
-    }
+    // ==================
+    // RELASI — DATA DASAR
+    // ==================
 
     public function wilayah() {
         return $this->belongsTo(Wilayah::class);
     }
 
-    // Helper methods to get specific relationships
+    public function keluargas() {
+        return $this->belongsToMany(Keluarga::class, 'keluarga_anggota')
+            ->withPivot('hubungan_keluarga')
+            ->withTimestamps();
+    }
+
+    public function rumahTanggas() {
+        return $this->belongsToMany(RumahTangga::class, 'rumah_tangga_penduduk')
+            ->withPivot('hubungan_rumah_tangga')
+            ->withTimestamps();
+    }
+
+    // ==================
+    // RELASI — KESEHATAN
+    // ==================
+
+    // Data KIA dimana penduduk ini sebagai IBU
+    public function kiaAsIbu() {
+        return $this->hasMany(Kia::class, 'penduduk_id_ibu');
+    }
+
+    // Data KIA dimana penduduk ini sebagai ANAK
+    public function kiaAsAnak() {
+        return $this->hasMany(Kia::class, 'penduduk_id_anak');
+    }
+
+    // Data vaksin yang diterima penduduk ini
+    public function vaksins() {
+        return $this->hasMany(Vaksin::class, 'penduduk_id');
+    }
+
+    // ==================
+    // HELPER
+    // ==================
+
     public function getKeluargaUtama() {
-        return $this->keluargas()->wherePivot('hubungan_keluarga', 'kepala_keluarga')->first();
+        return $this->keluargas()
+            ->wherePivot('hubungan_keluarga', 'kepala_keluarga')
+            ->first();
     }
 
     public function getRumahTanggaUtama() {
-        return $this->rumahTanggas()->wherePivot('hubungan_rumah_tangga', 'kepala_rumah_tangga')->first();
+        return $this->rumahTanggas()
+            ->wherePivot('hubungan_rumah_tangga', 'kepala_rumah_tangga')
+            ->first();
     }
 }

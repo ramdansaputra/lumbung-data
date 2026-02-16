@@ -13,6 +13,7 @@ class PemantauanAnak extends Model {
     protected $fillable = [
         'kia_id',
         'posyandu_id',
+        'user_id',
         'tanggal_pemantauan',
         'bulan',
         'tahun',
@@ -34,16 +35,19 @@ class PemantauanAnak extends Model {
 
     protected $casts = [
         'tanggal_pemantauan' => 'date',
-        'bulan' => 'integer',
-        'tahun' => 'integer',
-        'umur_bulan' => 'integer',
-        'berat_badan' => 'decimal:2',
-        'tinggi_badan' => 'decimal:2',
-        'lingkar_kepala' => 'decimal:2',
-        'lingkar_lengan' => 'decimal:2',
+        'bulan'              => 'integer',
+        'tahun'              => 'integer',
+        'umur_bulan'         => 'integer',
+        'berat_badan'        => 'decimal:2',
+        'tinggi_badan'       => 'decimal:2',
+        'lingkar_kepala'     => 'decimal:2',
+        'lingkar_lengan'     => 'decimal:2',
     ];
 
-    // Relasi
+    // ==================
+    // RELASI
+    // ==================
+
     public function kia() {
         return $this->belongsTo(Kia::class);
     }
@@ -52,19 +56,25 @@ class PemantauanAnak extends Model {
         return $this->belongsTo(Posyandu::class);
     }
 
-    // Accessor: apakah anak stunting?
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    // ==================
+    // ACCESSOR
+    // ==================
+
     public function getIsStuntingAttribute(): bool {
         return in_array($this->status_tb_u, ['pendek', 'sangat_pendek']);
     }
 
-    // Label status gizi
     public function getStatusGiziLabelAttribute(): string {
         return match ($this->status_tb_u) {
             'sangat_pendek' => 'Sangat Pendek (Stunting Berat)',
-            'pendek' => 'Pendek (Stunting)',
-            'normal' => 'Normal',
-            'tinggi' => 'Tinggi',
-            default => '-',
+            'pendek'        => 'Pendek (Stunting)',
+            'normal'        => 'Normal',
+            'tinggi'        => 'Tinggi',
+            default         => '-',
         };
     }
 }

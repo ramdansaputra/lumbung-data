@@ -13,6 +13,7 @@ class PemantauanBumil extends Model {
     protected $fillable = [
         'kia_id',
         'posyandu_id',
+        'user_id',
         'tanggal_pemantauan',
         'bulan',
         'tahun',
@@ -37,16 +38,21 @@ class PemantauanBumil extends Model {
     ];
 
     protected $casts = [
-        'tanggal_pemantauan' => 'date',
-        'bulan' => 'integer',
-        'tahun' => 'integer',
-        'usia_kehamilan' => 'integer',
-        'berat_badan' => 'decimal:2',
-        'tinggi_badan' => 'decimal:2',
-        'lingkar_lengan' => 'decimal:2',
+        'tanggal_pemantauan'    => 'date',
+        'bulan'                 => 'integer',
+        'tahun'                 => 'integer',
+        'usia_kehamilan'        => 'integer',
+        'berat_badan'           => 'decimal:2',
+        'tinggi_badan'          => 'decimal:2',
+        'lingkar_lengan'        => 'decimal:2',
+        'tekanan_darah_sistole' => 'decimal:1',
+        'tekanan_darah_diastole' => 'decimal:1',
     ];
 
-    // Relasi
+    // ==================
+    // RELASI
+    // ==================
+
     public function kia() {
         return $this->belongsTo(Kia::class);
     }
@@ -55,7 +61,14 @@ class PemantauanBumil extends Model {
         return $this->belongsTo(Posyandu::class);
     }
 
-    // Accessor
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    // ==================
+    // ACCESSOR
+    // ==================
+
     public function getTekananDarahAttribute(): string {
         if ($this->tekanan_darah_sistole && $this->tekanan_darah_diastole) {
             return $this->tekanan_darah_sistole . '/' . $this->tekanan_darah_diastole;
