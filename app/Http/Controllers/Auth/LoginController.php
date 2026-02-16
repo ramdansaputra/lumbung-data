@@ -13,20 +13,37 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    // Ganti method login() yang lama dengan ini:
+
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
+        $request->validate([
+            'login'    => 'required', // Bisa email atau username (NIK)
             'password' => 'required'
         ]);
 
+        $login_type = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) 
+            ? 'email' 
+            : 'username';
+
+        $credentials = [
+            $login_type => $request->input('login'),
+            'password'  => $request->input('password')
+        ];
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Redirect sesuai Role
+            if (Auth::user()->role === 'warga') {
+                return redirect()->route('warga.dashboard');
+            }
+            
             return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah'
+            'login' => 'NIK/Email atau password salah',
         ]);
     }
 

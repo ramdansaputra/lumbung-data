@@ -18,6 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'penduduk_id', // Tambahkan ini
         'name',
         'username',
         'email',
@@ -46,5 +47,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    // Relasi ke Penduduk
+    public function penduduk()
+    {
+        return $this->belongsTo(Penduduk::class, 'penduduk_id');
+    }
+
+    // Cek apakah user adalah warga
+    public function isWarga()
+    {
+        return $this->role === 'warga';
+    }
+
+    public function isAdminOrOperator()
+    {
+        return in_array($this->role, ['admin', 'operator']);
     }
 }

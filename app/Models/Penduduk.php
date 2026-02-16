@@ -30,6 +30,12 @@ class Penduduk extends Model {
         'tanggal_lahir' => 'date',
     ];
 
+    // Relasi ke User (Akun Login)
+    public function user()
+    {
+        return $this->hasOne(User::class, 'penduduk_id');
+    }
+
     // Many-to-many relationship with Keluarga via keluarga_anggota pivot
     public function keluargas() {
         return $this->belongsToMany(Keluarga::class, 'keluarga_anggota')

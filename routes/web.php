@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\Auth\AktivasiWargaController;
+use App\Http\Controllers\Warga\DashboardWargaController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -114,6 +116,42 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 // SETUP
 Route::get('/setup', [SetupController::class, 'showSetup'])->name('setup')->middleware('check.setup');
 Route::post('/setup', [SetupController::class, 'register'])->name('setup.register');
+
+// --- AUTH WARGA (AKTIVASI) ---
+Route::middleware('guest')->group(function() {
+    Route::get('/layanan-mandiri/aktivasi', [AktivasiWargaController::class, 'showCheckForm'])->name('aktivasi.index');
+    Route::post('/layanan-mandiri/cek', [AktivasiWargaController::class, 'check'])->name('aktivasi.check');
+    Route::post('/layanan-mandiri/daftar', [AktivasiWargaController::class, 'register'])->name('aktivasi.store');
+});
+
+// --- AREA WARGA (SUDAH LOGIN) ---
+Route::prefix('warga')->name('warga.')->middleware(['auth', 'role:warga'])->group(function () {
+    
+    // Dashboard
+    Route::get('/dashboard', function() {
+        return view('warga.dashboard'); 
+    })->name('dashboard');
+
+    // Layanan Surat
+    Route::get('/surat', function() {
+        return view('warga.surat.index'); 
+    })->name('surat.index');
+    
+    // Profil
+    Route::get('/profil', function() {
+        // PERBAIKAN: Gunakan Auth::user() huruf besar, bukan auth()->user()
+        /** @var \App\Models\User $user */
+        $user = Auth::user(); 
+        
+        // Pastikan load relasi penduduk jika user ada
+        if($user) {
+            $user->load('penduduk');
+        }
+
+        return view('warga.profil', compact('user'));
+    })->name('profil');
+
+});
 
 /*
 |--------------------------------------------------------------------------

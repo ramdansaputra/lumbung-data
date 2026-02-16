@@ -65,14 +65,73 @@
 
             </div>
 
-            <div class="hidden xl:flex items-center">
-                <a href="{{ route('setup') }}" 
-                class="group flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transition-all duration-300 transform hover:-translate-y-0.5">
-                    <span>Login Admin</span>
-                    <svg class="w-4 h-4 text-emerald-100 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                    </svg>
-                </a>
+            <div class="hidden xl:flex items-center gap-4">
+                {{-- LOGIKA: Jika Pengunjung BELUM Login (Guest) --}}
+                @guest
+                    <!-- <a href="{{ route('aktivasi.index') }}" 
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-slate-100 text-slate-600 font-semibold rounded-2xl hover:bg-slate-200 transition">
+                        Aktivasi Akun
+                    </a> -->
+                    <a href="{{ route('aktivasi.index') }}" 
+                    class="text-sm font-semibold gap-2 w-full px-4 py-3 bg-slate-200 text-slate-600 rounded-2xl hover:bg-slate-200 hover:text-emerald-600 transition duration-300">
+                        Aktivasi Akun
+                    </a>
+
+                    <a href="{{ route('login') }}" 
+                    class="group flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transition-all duration-300">
+                        <span>Masuk</span>
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                        </svg>
+                    </a>
+                @endguest
+
+                {{-- LOGIKA: Jika Pengunjung SUDAH Login (Auth) --}}
+                @auth
+                    <div class="relative group z-50">
+                        <button class="flex items-center gap-3 px-4 py-2 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all duration-300">
+                            <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-sm">
+                                {{ substr(Auth::user()->name, 0, 1) }} </div>
+                            <div class="text-left hidden md:block">
+                                <p class="text-xs text-slate-500 font-medium">Halo,</p>
+                                <p class="text-sm font-semibold text-slate-700 max-w-[100px] truncate">{{ Auth::user()->name }}</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-400 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right">
+                            <div class="p-2">
+                                @if(Auth::user()->role == 'warga')
+                                    <a href="{{ route('warga.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 rounded-xl hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                        Dashboard Warga
+                                    </a>
+                                    <a href="{{ route('warga.profil') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 rounded-xl hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        Profil Saya
+                                    </a>
+                                @else
+                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 rounded-xl hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                        Dashboard Admin
+                                    </a>
+                                @endif
+                                
+                                <hr class="my-2 border-slate-100">
+
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                                        Keluar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endauth
             </div>
 
             <button id="mobile-menu-btn" class="xl:hidden p-2 rounded-lg text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 focus:outline-none transition">
@@ -119,11 +178,60 @@
                 Kontak
             </a>
             
-            <div class="pt-4 mt-2 border-t border-slate-100 px-2">
-                <a href="{{ route('setup') }}" class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-emerald-600 text-white font-semibold rounded-2xl hover:bg-emerald-700 transition shadow-md hover:shadow-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-                    Login Admin
-                </a>
+            <div class="pt-4 mt-2 border-t border-slate-100 px-2 space-y-3">
+                
+                {{-- LOGIKA 1: Jika Belum Login (Tamu) --}}
+                @guest
+                    <a href="{{ route('aktivasi.index') }}" 
+                    class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-slate-100 text-slate-600 font-semibold rounded-2xl hover:bg-slate-200 transition">
+                        Aktivasi Akun
+                    </a>
+
+                    <a href="{{ route('login') }}" 
+                    class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-emerald-600 text-white font-semibold rounded-2xl hover:bg-emerald-700 transition shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                        </svg>
+                        Masuk
+                    </a>
+                @endguest
+
+                {{-- LOGIKA 2: Jika Sudah Login (User/Admin) --}}
+                @auth
+                    <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl mb-2">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-xs text-slate-500">Halo,</p>
+                            <p class="font-bold text-slate-700 truncate">{{ Auth::user()->name }}</p>
+                        </div>
+                    </div>
+
+                    @if(Auth::user()->role == 'warga')
+                        <a href="{{ route('warga.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Dashboard Warga
+                        </a>
+                        <a href="{{ route('warga.profil') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Profil Saya
+                        </a>
+                    @else
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            Dashboard Admin
+                        </a>
+                    @endif
+
+                    <form action="{{ route('logout') }}" method="POST" class="mt-2 pt-2 border-t border-slate-100">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 font-semibold rounded-2xl hover:bg-red-100 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                            Keluar
+                        </button>
+                    </form>
+                @endauth
             </div>
         </div>
     </div>
