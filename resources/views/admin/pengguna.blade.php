@@ -5,11 +5,10 @@
 @section('content')
 <div class="min-h-screen bg-slate-100">
     <div class="max-w-7xl mx-auto">
-        <!-- HEADER -->
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-800">Pengguna</h1>
-                <p class="text-sm text-slate-500">Manajemen pengguna sistem.</p>
+                <p class="text-sm text-slate-500">Manajemen pengguna sistem (Admin, Operator, & Warga).</p>
             </div>
             <a href="{{ route('admin.pengguna.create') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-sm font-bold rounded-xl shadow-md transition">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +18,6 @@
             </a>
         </div>
 
-        <!-- TABLE -->
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
@@ -35,12 +33,28 @@
                     <tbody class="divide-y divide-slate-200">
                         @forelse($users as $user)
                         <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ $user->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                                {{ $user->name }}
+                                {{-- Tampilkan badge kecil jika user ini terhubung dengan data Penduduk --}}
+                                @if($user->penduduk_id)
+                                    <span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        Terverifikasi
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ $user->username }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ $user->email }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ $user->email ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
-                                    {{ $user->role === 'admin' ? 'Admin' : 'Operator' }}
+                                @php
+                                    $badgeColor = match($user->role) {
+                                        'admin' => 'bg-red-100 text-red-800',
+                                        'operator' => 'bg-blue-100 text-blue-800',
+                                        'warga' => 'bg-emerald-100 text-emerald-800',
+                                        default => 'bg-gray-100 text-gray-800'
+                                    };
+                                @endphp
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $badgeColor }}">
+                                    {{ ucfirst($user->role) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

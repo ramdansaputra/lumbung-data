@@ -10,12 +10,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+    ->withMiddleware(function (Middleware $middleware) {
+        
+        // --- UPDATE BAGIAN INI ---
         $middleware->alias([
-            'check.setup' => \App\Http\Middleware\CheckSetup::class,
+            'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            
+            // Tambahkan baris ini:
             'check.identitas.desa' => \App\Http\Middleware\CheckIdentitasDesa::class,
         ]);
+        // -------------------------
+
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\InfoDesaController;
 use App\Http\Controllers\Admin\KeluargaController;
 use App\Http\Controllers\Admin\KesehatanController;
 use App\Http\Controllers\Admin\KeuanganController;
-use App\Http\Controllers\Admin\LayananSuratController;
+// use App\Http\Controllers\Admin\LayananSuratController;
 use App\Http\Controllers\Admin\PendudukController;
 use App\Http\Controllers\Admin\PengaduanController;
 use App\Http\Controllers\Admin\PenggunaController;
@@ -23,6 +23,9 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\Auth\AktivasiWargaController;
 use App\Http\Controllers\Warga\DashboardWargaController;
+// use App\Http\Controllers\Warga\LayananSuratController;
+use App\Http\Controllers\Admin\LayananSuratController as AdminSuratController; // Kasi nama alias 'AdminSuratController'
+use App\Http\Controllers\Warga\LayananSuratController as WargaSuratController; // Kasi nama alias 'WargaSuratController'
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -35,6 +38,7 @@ use App\Http\Controllers\Admin\DinasLuarController;
 use App\Http\Controllers\Admin\KehadiranBulananController;
 use App\Http\Controllers\Admin\KehadiranTahunanController;
 use App\Http\Controllers\Admin\RekapitulasiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +154,12 @@ Route::prefix('warga')->name('warga.')->middleware(['auth', 'role:warga'])->grou
 
         return view('warga.profil', compact('user'));
     })->name('profil');
+
+    // === PERBAIKAN DISINI (Gunakan WargaSuratController) ===
+    Route::get('/surat', [WargaSuratController::class, 'index'])->name('surat.index');
+    Route::get('/surat/create', [WargaSuratController::class, 'create'])->name('surat.create');
+    Route::post('/surat', [WargaSuratController::class, 'store'])->name('surat.store');
+    // =======================================================
 
 });
 

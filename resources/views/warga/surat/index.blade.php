@@ -6,9 +6,9 @@
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-slate-800">Layanan Surat Online</h1>
-        <button class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition shadow-md">
-            + Buat Permohonan Baru
-        </button>
+        <a href="{{ route('warga.surat.create') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition shadow-md inline-flex items-center gap-2">
+            <span>+</span> Buat Permohonan Baru
+        </a>
     </div>
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-12 text-center">

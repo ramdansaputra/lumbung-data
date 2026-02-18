@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Penduduk extends Model {
+    
     protected $table = 'penduduk';
 
     protected $fillable = [
@@ -31,7 +32,7 @@ class Penduduk extends Model {
     ];
 
     // ==================
-    // RELASI — DATA DASAR
+    // RELASI — DATA DASAR & AKUN
     // ==================
 
     // Relasi ke User (Akun Login)
@@ -40,23 +41,30 @@ class Penduduk extends Model {
         return $this->hasOne(User::class, 'penduduk_id');
     }
 
-    // Many-to-many relationship with Keluarga via keluarga_anggota pivot
+    // Relasi ke Wilayah
+    public function wilayah() {
+        return $this->belongsTo(Wilayah::class, 'wilayah_id');
+    }
+
+    // Relasi Many-to-many ke Keluarga via pivot keluarga_anggota
     public function keluargas() {
         return $this->belongsToMany(Keluarga::class, 'keluarga_anggota')
                     ->withPivot('hubungan_keluarga')
                     ->withTimestamps();
     }
 
-    // Many-to-many relationship with RumahTangga via rumah_tangga_penduduk pivot
+    // Relasi Many-to-many ke RumahTangga via pivot rumah_tangga_penduduk
     public function rumahTanggas() {
         return $this->belongsToMany(RumahTangga::class, 'rumah_tangga_penduduk')
                     ->withPivot('hubungan_rumah_tangga')
                     ->withTimestamps();
     }
 
+
     public function wilayah() {
         return $this->belongsTo(Wilayah::class);
     }
+
 
     // ==================
     // RELASI — KESEHATAN
@@ -81,12 +89,14 @@ class Penduduk extends Model {
     // HELPER
     // ==================
 
+    // Ambil keluarga utama (dimana dia jadi Kepala Keluarga)
     public function getKeluargaUtama() {
         return $this->keluargas()
             ->wherePivot('hubungan_keluarga', 'kepala_keluarga')
             ->first();
     }
 
+    // Ambil rumah tangga utama (dimana dia jadi Kepala Rumah Tangga)
     public function getRumahTanggaUtama() {
         return $this->rumahTanggas()
             ->wherePivot('hubungan_rumah_tangga', 'kepala_rumah_tangga')
