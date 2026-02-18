@@ -120,11 +120,12 @@
             'lainnya' => 'Lainnya',
             ];
             $dosisList = [
-            'dosis_1' => 'Dosis 1',
-            'dosis_2' => 'Dosis 2',
-            'dosis_3' => 'Dosis 3 / Booster',
-            'lengkap' => 'Lengkap',
-            'ulangan' => 'Ulangan',
+            1 => 'Dosis 1',
+            2 => 'Dosis 2',
+            3 => 'Dosis 3 / Booster',
+            4 => 'Booster',
+            5 => 'Lengkap',
+            6 => 'Ulangan',
             ];
             @endphp
 

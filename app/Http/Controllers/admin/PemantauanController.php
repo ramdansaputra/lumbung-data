@@ -70,7 +70,7 @@ class PemantauanController extends Controller {
 
         RekapKesehatan::create($validated);
 
-        return redirect()->route('kesehatan.pemantauan')
+        return redirect()->route('admin.kesehatan.pemantauan')
             ->with('success', 'Data rekap kesehatan tahun ' . $validated['tahun'] . ' berhasil disimpan.');
     }
 
@@ -112,13 +112,13 @@ class PemantauanController extends Controller {
 
         $rekapKesehatan->update($validated);
 
-        return redirect()->route('kesehatan.pemantauan')
+        return redirect()->route('admin.kesehatan.pemantauan')
             ->with('success', 'Data rekap kesehatan berhasil diperbarui.');
     }
 
     public function destroyRekap(RekapKesehatan $rekapKesehatan): RedirectResponse {
         $rekapKesehatan->delete();
-        return redirect()->route('kesehatan.pemantauan')
+        return redirect()->route('admin.kesehatan.pemantauan')
             ->with('success', 'Data rekap kesehatan berhasil dihapus.');
     }
 }

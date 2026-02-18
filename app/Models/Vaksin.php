@@ -83,8 +83,10 @@ class Vaksin extends Model {
         return match ($this->dosis) {
             1       => 'Dosis 1',
             2       => 'Dosis 2',
-            3       => 'Dosis 3',
+            3       => 'Dosis 3 / Booster',
             4       => 'Booster',
+            5       => 'Lengkap',
+            6       => 'Ulangan',
             default => 'Dosis ' . $this->dosis,
         };
     }
