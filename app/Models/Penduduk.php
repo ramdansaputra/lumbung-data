@@ -60,12 +60,6 @@ class Penduduk extends Model {
                     ->withTimestamps();
     }
 
-
-    public function wilayah() {
-        return $this->belongsTo(Wilayah::class);
-    }
-
-
     // ==================
     // RELASI — KESEHATAN
     // ==================

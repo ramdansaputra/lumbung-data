@@ -84,11 +84,16 @@
                             <dd class="text-sm font-semibold text-gray-800">{{ $pengaduan->penduduk->nik ?? '-' }}</dd>
                         </div>
                         @endif
+                    
+                        {{-- Email selalu tampil, di luar @if penduduk --}}
                         <div class="bg-gray-50 rounded-xl p-3.5">
-                            <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Tanggal
-                                Pengaduan</dt>
-                            <dd class="text-sm font-semibold text-gray-800">{{ $pengaduan->created_at->format('d F Y,
-                                H:i') }}</dd>
+                            <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Email</dt>
+                            <dd class="text-sm font-semibold text-gray-800">{{ $pengaduan->email ?? '-' }}</dd>
+                        </div>
+                    
+                        <div class="bg-gray-50 rounded-xl p-3.5">
+                            <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Tanggal Pengaduan</dt>
+                            <dd class="text-sm font-semibold text-gray-800">{{ $pengaduan->created_at->format('d F Y, H:i') }}</dd>
                         </div>
                         <div class="bg-gray-50 rounded-xl p-3.5">
                             <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">IP Address</dt>
@@ -96,8 +101,7 @@
                         </div>
                         @if($pengaduan->petugas)
                         <div class="bg-gray-50 rounded-xl p-3.5">
-                            <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Ditangani Oleh
-                            </dt>
+                            <dt class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Ditangani Oleh</dt>
                             <dd class="text-sm font-semibold text-gray-800">{{ $pengaduan->petugas->name }}</dd>
                         </div>
                         @endif

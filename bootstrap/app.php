@@ -11,14 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        
-        // --- UPDATE BAGIAN INI ---
-        $middleware->alias([
-            'role' => \App\Http\Middleware\EnsureUserHasRole::class,
-            
-            // Tambahkan baris ini:
-            'check.identitas.desa' => \App\Http\Middleware\CheckIdentitasDesa::class,
-        ]);
+
+    // --- UPDATE BAGIAN INI ---
+    $middleware->alias([
+        'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+        'check.identitas.desa' => \App\Http\Middleware\CheckIdentitasDesa::class,
+        'check.setup' => \App\Http\Middleware\CheckSetup::class, // tambah ini
+    ]);
         // -------------------------
 
     })

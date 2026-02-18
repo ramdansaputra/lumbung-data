@@ -17,6 +17,7 @@ use App\Models\DataPerangkatDesa;
 use App\Models\AsetDesa;          
 use App\Models\Apbdes;
 use App\Models\KategoriKonten;
+use App\Models\Pengaduan;
 
 class FrontendController extends Controller
 {
@@ -467,13 +468,22 @@ class FrontendController extends Controller
         return view('frontend.pages.kontak.index', compact('infoKontak', 'departemen'));
     }
 
-    public function storeKontak(Request $request)
-    {
+    public function storeKontak(Request $request) {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email',
-            'subjek' => 'required|string|max:255',
+            'nama'  => 'required|string|max:100',
+            'email' => 'required|email|max:255',
+            'subjek' => 'required|string|max:200',
             'pesan' => 'required|string',
+        ]);
+
+        Pengaduan::create([
+            'nama'       => $request->nama,
+            'email'      => $request->email,
+            'subjek'     => $request->subjek,
+            'isi'        => $request->pesan,
+            'ip_address' => $request->ip(),
+            'status'     => Pengaduan::STATUS_BARU,
+            // penduduk_id & petugas_id dibiarkan null (pengaduan anonim dari publik)
         ]);
 
         return redirect()->route('kontak')

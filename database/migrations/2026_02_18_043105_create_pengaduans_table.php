@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('penduduk_id')->nullable()->constrained('penduduk')->nullOnDelete();
             // nullable karena bisa pengaduan dari umum (anonim), seperti OpenSID
             $table->string('nama', 100);          // nama pelapor (bisa diisi manual jika anonim)
+            $table->string('email', 100)->nullable(); // email pelapor (opsional, untuk balasan jika anonim)
             $table->string('subjek', 200);         // judul/subjek pengaduan
             $table->text('isi');                   // isi pengaduan
             $table->string('lampiran')->nullable(); // file attachment

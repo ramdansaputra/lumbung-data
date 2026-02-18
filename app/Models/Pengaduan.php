@@ -11,6 +11,7 @@ class Pengaduan extends Model {
     protected $fillable = [
         'penduduk_id',
         'nama',
+        'email',
         'subjek',
         'isi',
         'lampiran',
