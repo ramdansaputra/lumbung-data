@@ -18,6 +18,8 @@ use App\Models\AsetDesa;
 use App\Models\Apbdes;
 use App\Models\KategoriKonten;
 use App\Models\Pengaduan;
+use App\Models\Lapak;
+use App\Models\LapakProduk;
 
 class FrontendController extends Controller
 {
@@ -588,5 +590,30 @@ class FrontendController extends Controller
         ];
 
         return view('frontend.pages.faq.index', compact('faqs'));
+    }
+    
+    public function lapak(Request $request) {
+        $query = Lapak::with('penduduk')
+            ->withCount('produkAktif')
+            ->where('status', 'aktif');
+
+        if ($request->filled('search')) {
+            $query->where('nama_toko', 'like', '%' . $request->search . '%');
+        }
+
+        $lapakList = $query->latest()->paginate(12);
+
+        return view('frontend.pages.lapak.index', compact('lapakList'));
+    }
+
+    public function lapakShow($slug) {
+        $lapak = Lapak::where('slug', $slug)
+            ->where('status', 'aktif')
+            ->with('penduduk')
+            ->firstOrFail();
+
+        $produk = $lapak->produkAktif()->paginate(12);
+
+        return view('frontend.pages.lapak.show', compact('lapak', 'produk'));
     }
 }

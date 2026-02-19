@@ -108,6 +108,10 @@ Route::get('/syarat-ketentuan', function () {
 // FAQ
 Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
 
+// LAPAK
+Route::get('/lapak', [FrontendController::class, 'lapak'])->name('lapak');
+Route::get('/lapak/{slug}', [FrontendController::class, 'lapakShow'])->name('lapak.show');
+
 // routes/web.php
 
 Route::get('/peta-situs', function () {
