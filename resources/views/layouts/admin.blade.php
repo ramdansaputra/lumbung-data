@@ -72,12 +72,19 @@
             background-clip: text;
         }
 
+        /* ── Sidebar ─────────────────────────────────────────────────── */
         .sidebar {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
+            /* overflow-y: auto makes the sidebar scroll independently */
             overflow-y: auto;
         }
 
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        /* Hide text when collapsed */
         .sidebar.collapsed .menu-text,
         .sidebar.collapsed .logo-text {
             opacity: 0;
@@ -91,10 +98,12 @@
             display: none;
         }
 
+        /* Hide submenu in collapsed mode */
         .sidebar.collapsed .submenu {
             display: none !important;
         }
 
+        /* Center icons when collapsed and remove gap */
         .sidebar.collapsed .menu-item,
         .sidebar.collapsed .menu-header,
         .sidebar.collapsed .logo-wrapper,
@@ -110,6 +119,7 @@
             transform: scale(1.1);
         }
 
+        /* Toggle button */
         .toggle-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -118,6 +128,7 @@
             transform: scale(1.05);
         }
 
+        /* Tooltip */
         .sidebar.collapsed [data-tooltip]:hover::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -140,6 +151,7 @@
             position: relative;
         }
 
+        /* Logout button collapsed */
         .sidebar.collapsed .logout-btn span {
             display: none;
         }
@@ -155,8 +167,11 @@
     $desa = App\Models\IdentitasDesa::first();
     if (!$desa) {
     $desa = App\Models\IdentitasDesa::create([
-    'nama_desa' => '', 'kode_desa' => '',
-    'kecamatan' => '', 'kabupaten' => '', 'provinsi' => '',
+    'nama_desa' => '',
+    'kode_desa' => '',
+    'kecamatan' => '',
+    'kabupaten' => '',
+    'provinsi' => '',
     ]);
     }
     $isDesaFilled = $desa &&
@@ -165,29 +180,38 @@
     @endphp
 </head>
 
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 antialiased" x-data="{ sidebarOpen: true }">
-    <div class="flex min-h-screen">
+{{--
+GABUNGAN:
+• h-screen + overflow-hidden → dari Doc 1 (sidebar scroll mandiri, layout tidak overflow)
+• request()->is('...*') → dari Doc 2 (active-state detection lebih robust)
+• 'bg-white/15' pada menu-header active → dari Doc 1 & Doc 2 (konsisten)
+• Komentar seksi HTML → dari Doc 2 (lebih mudah dibaca)
+--}}
 
-        <!-- ================================================================== -->
-        <!-- SIDEBAR                                                             -->
-        <!-- ================================================================== -->
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 antialiased" x-data="{ sidebarOpen: true }">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- ================================================================ -->
+        <!-- SIDEBAR                                                           -->
+        <!-- ================================================================ -->
         <aside
             class="sidebar bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 text-white flex-shrink-0 shadow-2xl"
             :class="sidebarOpen ? 'w-72' : 'w-[80px] collapsed'" x-data="{
-            infoDesa:         {{ request()->is('admin/identitas-desa*') || request()->is('admin/info-desa*') || request()->is('admin/pemerintah-desa*') || request()->is('admin/lembaga*') || request()->is('admin/status-desa*') || request()->is('admin/layanan-pelanggan*') || request()->is('admin/kerjasama*') ? 'true' : 'false' }},
-            kependudukan:     {{ request()->is('admin/penduduk*') || request()->is('admin/keluarga*') || request()->is('admin/rumah-tangga*') || request()->is('admin/kelompok*') || request()->is('admin/data-suplemen*') || request()->is('admin/calon-pemilih*') ? 'true' : 'false' }},
-            statistik:        {{ request()->is('admin/statistik*') ? 'true' : 'false' }},
-            kesehatan:        {{ request()->is('admin/kesehatan*') ? 'true' : 'false' }},
-            kehadiran:        {{ request()->is('admin/pegawai*') || request()->is('admin/jenis-kehadiran*') || request()->is('admin/kehadiran-harian*') || request()->is('admin/jam-kerja*') || request()->is('admin/keterangan*') || request()->is('admin/dinas-luar*') || request()->is('admin/kehadiran*') ? 'true' : 'false' }},
-            layananSurat:     {{ request()->is('admin/layanan-surat*') ? 'true' : 'false' }},
-            sekretariat:      {{ request()->is('admin/sekretariat*') ? 'true' : 'false' }},
-            suratDinas:       {{ request()->is('admin/surat-dinas*') ? 'true' : 'false' }},
-            bukuAdministrasi: {{ request()->is('admin/buku-administrasi*') ? 'true' : 'false' }},
-            keuangan:         {{ request()->is('admin/keuangan*') ? 'true' : 'false' }},
-            pertanahan:       {{ request()->is('admin/pertanahan*') ? 'true' : 'false' }},
-            opendk:           {{ request()->is('admin/opendk*') ? 'true' : 'false' }},
-            sistem:           {{ request()->is('admin/pengguna*') || request()->is('admin/role*') || request()->is('admin/pengaturan*') || request()->is('admin/backup*') || request()->is('admin/log*') ? 'true' : 'false' }}
-        }">
+                infoDesa:         {{ request()->is('admin/identitas-desa*') || request()->is('admin/info-desa*') || request()->is('admin/pemerintah-desa*') || request()->is('admin/lembaga*') || request()->is('admin/status-desa*') || request()->is('admin/layanan-pelanggan*') || request()->is('admin/kerjasama*') ? 'true' : 'false' }},
+                kependudukan:     {{ request()->is('admin/penduduk*') || request()->is('admin/keluarga*') || request()->is('admin/rumah-tangga*') || request()->is('admin/kelompok*') || request()->is('admin/data-suplemen*') || request()->is('admin/calon-pemilih*') ? 'true' : 'false' }},
+                statistik:        {{ request()->is('admin/statistik*') ? 'true' : 'false' }},
+                kesehatan:        {{ request()->is('admin/kesehatan*') ? 'true' : 'false' }},
+                kehadiran:        {{ request()->is('admin/pegawai*') || request()->is('admin/jenis-kehadiran*') || request()->is('admin/kehadiran-harian*') || request()->is('admin/jam-kerja*') || request()->is('admin/keterangan*') || request()->is('admin/dinas-luar*') || request()->is('admin/kehadiran*') ? 'true' : 'false' }},
+                layananSurat:     {{ request()->is('admin/layanan-surat*') ? 'true' : 'false' }},
+                sekretariat:      {{ request()->is('admin/sekretariat*') ? 'true' : 'false' }},
+                suratDinas:       {{ request()->is('admin/surat-dinas*') ? 'true' : 'false' }},
+                bukuAdministrasi: {{ request()->is('admin/buku-administrasi*') ? 'true' : 'false' }},
+                keuangan:         {{ request()->is('admin/keuangan*') ? 'true' : 'false' }},
+                pertanahan:       {{ request()->is('admin/pertanahan*') ? 'true' : 'false' }},
+                opendk:           {{ request()->is('admin/opendk*') ? 'true' : 'false' }},
+                sistem:           {{ request()->is('admin/pengguna*') || request()->is('admin/role*') || request()->is('admin/pengaturan*') || request()->is('admin/backup*') || request()->is('admin/log*') ? 'true' : 'false' }}
+            }">
 
             <div :class="sidebarOpen ? 'p-6' : 'py-6 px-3'">
 
@@ -915,9 +939,9 @@
             </div>
         </aside>
 
-        <!-- ================================================================== -->
-        <!-- MAIN CONTENT                                                        -->
-        <!-- ================================================================== -->
+        <!-- ================================================================ -->
+        <!-- MAIN CONTENT                                                      -->
+        <!-- ================================================================ -->
         <main class="flex-1 flex flex-col overflow-hidden">
 
             <header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between shadow-sm">
@@ -969,6 +993,7 @@
                     </div>
                 </div>
                 @endif
+
                 @yield('content')
             </section>
 
