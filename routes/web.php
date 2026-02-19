@@ -38,6 +38,8 @@ use App\Http\Controllers\Admin\DinasLuarController;
 use App\Http\Controllers\Admin\KehadiranBulananController;
 use App\Http\Controllers\Admin\KehadiranTahunanController;
 use App\Http\Controllers\Admin\RekapitulasiController;
+use App\Http\Controllers\Admin\LapakController;
+use App\Http\Controllers\Admin\LapakProdukController;
 
 
 /*
@@ -599,9 +601,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | LAPAK
     |--------------------------------------------------------------------------
     */
-    Route::get('/lapak', function () {
-        return view('admin.lapak');
-    })->name('lapak');
+    Route::prefix('lapak')->name('lapak.')->group(function () {
+        Route::get('/', [LapakController::class, 'index'])->name('index');
+        Route::get('/tambah', [LapakController::class, 'create'])->name('create');
+        Route::post('/', [LapakController::class, 'store'])->name('store');
+        Route::get('/{lapak}', [LapakController::class, 'show'])->name('show');
+        Route::get('/{lapak}/edit', [LapakController::class, 'edit'])->name('edit');
+        Route::put('/{lapak}', [LapakController::class, 'update'])->name('update');
+        Route::delete('/{lapak}', [LapakController::class, 'destroy'])->name('destroy');
+        Route::patch('/{lapak}/toggle-status', [LapakController::class, 'toggleStatus'])->name('toggle-status');
+
+        // Produk per Lapak
+        Route::prefix('/{lapak}/produk')->name('produk.')->group(function () {
+            Route::get('/', [LapakProdukController::class, 'index'])->name('index');
+            Route::get('/tambah', [LapakProdukController::class, 'create'])->name('create');
+            Route::post('/', [LapakProdukController::class, 'store'])->name('store');
+            Route::get('/{produk}/edit', [LapakProdukController::class, 'edit'])->name('edit');
+            Route::put('/{produk}', [LapakProdukController::class, 'update'])->name('update');
+            Route::delete('/{produk}', [LapakProdukController::class, 'destroy'])->name('destroy');
+        });
+    });
 
     /*
     |--------------------------------------------------------------------------
