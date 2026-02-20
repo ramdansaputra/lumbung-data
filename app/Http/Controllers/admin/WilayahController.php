@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\InfoDesa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Wilayah;
-use App\Models\Desa;
+use App\Models\IdentitasDesa; // [PERBAIKAN 1] Ubah Desa menjadi IdentitasDesa
 use Illuminate\Http\Request;
 
-class WilayahController extends Controller
-{
-    public function index()
-    {
+class WilayahController extends Controller {
+    public function index() {
         $wilayahRecords = Wilayah::all();
 
         $data = [
@@ -35,13 +33,11 @@ class WilayahController extends Controller
         return view('admin.info-desa.wilayah-administratif', compact('data'));
     }
 
-    public function create()
-    {
+    public function create() {
         return view('admin.info-desa.wilayah-create');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         // Validasi input
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -53,7 +49,9 @@ class WilayahController extends Controller
             'perempuan' => 'required|integer|min:0',
         ]);
 
-        $desa = Desa::first();
+        // [PERBAIKAN 2] Gunakan IdentitasDesa, bukan Desa
+        $desa = IdentitasDesa::first();
+
         if (!$desa) {
             return redirect()->back()->with('error', 'Data desa belum diatur. Silakan atur identitas desa terlebih dahulu.');
         }
@@ -71,11 +69,10 @@ class WilayahController extends Controller
         ]);
 
         return redirect()->route('admin.info-desa.wilayah-administratif')
-                        ->with('success', 'Dusun berhasil ditambahkan!');
+            ->with('success', 'Dusun berhasil ditambahkan!');
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
         $wilayahRecord = Wilayah::findOrFail($id);
         $wilayah = [
             'id' => $wilayahRecord->id,
@@ -91,8 +88,7 @@ class WilayahController extends Controller
         return view('admin.info-desa.wilayah-edit', compact('wilayah'));
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         // Validasi input
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -117,11 +113,10 @@ class WilayahController extends Controller
         ]);
 
         return redirect()->route('admin.info-desa.wilayah-administratif')
-                        ->with('success', 'Dusun berhasil diperbarui!');
+            ->with('success', 'Dusun berhasil diperbarui!');
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $wilayah = Wilayah::findOrFail($id);
 
         // Check for related records (including soft deleted)
@@ -131,21 +126,20 @@ class WilayahController extends Controller
 
         if ($relatedPenduduk > 0 || $relatedKeluarga > 0 || $relatedRumahTangga > 0) {
             return redirect()->route('admin.info-desa.wilayah-administratif')
-                            ->with('error', 'Dusun tidak dapat dihapus karena masih memiliki data terkait: ' .
-                                   ($relatedPenduduk > 0 ? $relatedPenduduk . ' penduduk, ' : '') .
-                                   ($relatedKeluarga > 0 ? $relatedKeluarga . ' keluarga, ' : '') .
-                                   ($relatedRumahTangga > 0 ? $relatedRumahTangga . ' rumah tangga' : '') .
-                                   '. Hapus data terkait terlebih dahulu.');
+                ->with('error', 'Dusun tidak dapat dihapus karena masih memiliki data terkait: ' .
+                    ($relatedPenduduk > 0 ? $relatedPenduduk . ' penduduk, ' : '') .
+                    ($relatedKeluarga > 0 ? $relatedKeluarga . ' keluarga, ' : '') .
+                    ($relatedRumahTangga > 0 ? $relatedRumahTangga . ' rumah tangga' : '') .
+                    '. Hapus data terkait terlebih dahulu.');
         }
 
         $wilayah->delete();
 
         return redirect()->route('admin.info-desa.wilayah-administratif')
-                        ->with('success', 'Dusun berhasil dihapus!');
+            ->with('success', 'Dusun berhasil dihapus!');
     }
 
-    public function confirmDestroy($id)
-    {
+    public function confirmDestroy($id) {
         $wilayah = Wilayah::findOrFail($id);
 
         // Check for related records

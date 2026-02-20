@@ -13,7 +13,7 @@ use App\Models\Keluarga;
 use App\Models\Wilayah;
 use App\Models\Artikel;
 use App\Models\IdentitasDesa;
-use App\Models\DataPerangkatDesa; 
+use App\Models\PerangkatDesa;
 use App\Models\AsetDesa;          
 use App\Models\Apbdes;
 use App\Models\KategoriKonten;
@@ -78,13 +78,19 @@ class FrontendController extends Controller
             ];
         });
 
-        $perangkatQuery = DataPerangkatDesa::whereIn('jabatan', ['kades', 'sekdes'])->where('status', 'aktif')->get();
-        $perangkatUtama = $perangkatQuery->map(function($p) {
+        $perangkatQuery = PerangkatDesa::with('jabatan')
+            ->whereHas('jabatan', fn($q) => $q->whereIn('nama', ['Kepala Desa', 'Sekretaris Desa']))
+            ->where('status', '1')
+            ->orderedByUrutan()
+            ->get();
+
+        $perangkatUtama = $perangkatQuery->map(function ($p) {
             return [
-                'nama' => $p->nama,
-                'posisi' => $this->formatJabatan($p->jabatan),
-                // Gunakan avatar default jika foto perangkat belum ada fiturnya
-                'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=10b981&color=fff&size=500'
+                'nama'   => $p->nama,
+                'posisi' => $p->jabatan->nama ?? '-',
+                'foto'   => $p->foto
+                    ? asset('storage/' . $p->foto)
+                    : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=10b981&color=fff&size=500'
             ];
         });
 
@@ -236,17 +242,23 @@ class FrontendController extends Controller
             ]
         ];
 
-        $kades = DataPerangkatDesa::where('jabatan', 'kades')->where('status', 'aktif')->first();
-        
-        $perangkatLain = DataPerangkatDesa::where('jabatan', '!=', 'kades')
-            ->where('status', 'aktif')
-            ->orderByRaw("FIELD(jabatan, 'sekdes', 'kasi', 'kaur', 'kadus')")
+        $kades = PerangkatDesa::with('jabatan')
+            ->whereHas('jabatan', fn($q) => $q->where('nama', 'Kepala Desa'))
+            ->where('status', '1')
+            ->first();
+
+        $perangkatLain = PerangkatDesa::with('jabatan')
+            ->whereHas('jabatan', fn($q) => $q->where('nama', '!=', 'Kepala Desa'))
+            ->where('status', '1')
+            ->orderedByUrutan()
             ->get()
-            ->map(function($p) {
+            ->map(function ($p) {
                 return [
-                    'nama' => $p->nama,
-                    'jabatan' => $this->formatJabatan($p->jabatan),
-                    'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=059669&color=fff'
+                    'nama'    => $p->nama,
+                    'jabatan' => $p->jabatan->nama ?? '-',
+                    'foto'    => $p->foto
+                        ? asset('storage/' . $p->foto)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=059669&color=fff'
                 ];
             });
 
@@ -263,7 +275,7 @@ class FrontendController extends Controller
     public function profilKepalaDesa()
     {
         $identitas = $this->getIdentitasDesa();
-        $dataKades = DataPerangkatDesa::where('jabatan', 'kades')->where('status', 'aktif')->first();
+        $dataKades = PerangkatDesa::where('jabatan', 'kades')->where('status', 'aktif')->first();
 
         return view('frontend.pages.profil.kepala-desa', [
             'identitas_desa' => $identitas,
@@ -273,41 +285,57 @@ class FrontendController extends Controller
 
     public function pemerintahan()
     {
-        $perangkat = DataPerangkatDesa::where('status', 'aktif')->get();
+        $perangkat = PerangkatDesa::with('jabatan')->where('status', '1')->orderedByUrutan()->get();
 
         $struktur = [
             [
                 'kategori' => 'Pimpinan Desa',
-                'anggota' => $perangkat->filter(fn($p) => in_array($p->jabatan, ['kades', 'sekdes']))
-                    ->sortBy(fn($p) => $p->jabatan === 'kades' ? 0 : 1)
+                'anggota'  => $perangkat->filter(fn($p) => in_array($p->jabatan->nama ?? '', ['Kepala Desa', 'Sekretaris Desa']))
                     ->map(fn($p) => [
-                        'nama' => $p->nama,
-                        'posisi' => $this->formatJabatan($p->jabatan),
-                        'nip' => $p->no_sk,
-                        'status' => 'Aktif',
-                        'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=059669&color=fff&size=500'
-                ])
+                        'nama'   => $p->nama,
+                        'posisi' => $p->jabatan->nama ?? '-',
+                        'nip'    => $p->no_sk,
+                        'status' => $p->label_status,
+                        'foto'   => $p->foto ? asset('storage/' . $p->foto)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=059669&color=fff&size=500'
+                    ])
             ],
             [
                 'kategori' => 'Pelaksana Kewilayahan (Kepala Dusun)',
-                'anggota' => $perangkat->filter(fn($p) => $p->jabatan == 'kadus')->map(fn($p) => [
-                    'nama' => $p->nama,
-                    'posisi' => 'Kepala Dusun',
-                    'nip' => $p->no_sk,
-                    'status' => 'Aktif',
-                    'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=059669&color=fff&size=500'
-                ])
+                'anggota'  => $perangkat->filter(fn($p) => ($p->jabatan->nama ?? '') === 'Kepala Dusun')
+                    ->map(fn($p) => [
+                        'nama'   => $p->nama,
+                        'posisi' => 'Kepala Dusun',
+                        'nip'    => $p->no_sk,
+                        'status' => $p->label_status,
+                        'foto'   => $p->foto ? asset('storage/' . $p->foto)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=059669&color=fff&size=500'
+                    ])
             ],
             [
                 'kategori' => 'Pelaksana Teknis & Urusan',
-                'anggota' => $perangkat->filter(fn($p) => in_array($p->jabatan, ['kasi', 'kaur']))->map(fn($p) => [
-                    'nama' => $p->nama,
-                    'posisi' => $this->formatJabatan($p->jabatan),
-                    'nip' => $p->no_sk,
-                    'status' => 'Aktif',
-                    'foto' => 'https://ui-avatars.com/api/?name='.urlencode($p->nama).'&background=059669&color=fff&size=500'
-                ])
-            ]
+                'anggota'  => $perangkat->filter(fn($p) => str_contains($p->jabatan->nama ?? '', 'Seksi') || str_contains($p->jabatan->nama ?? '', 'Urusan'))
+                    ->map(fn($p) => [
+                        'nama'   => $p->nama,
+                        'posisi' => $p->jabatan->nama ?? '-',
+                        'nip'    => $p->no_sk,
+                        'status' => $p->label_status,
+                        'foto'   => $p->foto ? asset('storage/' . $p->foto)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=059669&color=fff&size=500'
+                    ])
+            ],
+            [
+                'kategori' => 'BPD',
+                'anggota'  => $perangkat->filter(fn($p) => ($p->jabatan->golongan ?? '') === 'bpd')
+                    ->map(fn($p) => [
+                        'nama'   => $p->nama,
+                        'posisi' => $p->jabatan->nama ?? '-',
+                        'nip'    => $p->no_sk,
+                        'status' => $p->label_status,
+                        'foto'   => $p->foto ? asset('storage/' . $p->foto)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode($p->nama) . '&background=1d4ed8&color=fff&size=500'
+                    ])
+            ],
         ];
 
         $pemerintahan = ['struktur' => $struktur];

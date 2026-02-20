@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ArtikelController;
 use App\Http\Controllers\Admin\AnalisisController;
-use App\Http\Controllers\Admin\BantuanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\IdentitasDesaController;
 use App\Http\Controllers\Admin\InfoDesaController;
@@ -40,6 +39,9 @@ use App\Http\Controllers\Admin\KehadiranTahunanController;
 use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\LapakController;
 use App\Http\Controllers\Admin\LapakProdukController;
+use App\Http\Controllers\Admin\BantuanController;
+use App\Http\Controllers\Admin\BantuanPesertaController;
+use App\Http\Controllers\Admin\PemerintahDesaController;
 
 
 /*
@@ -476,8 +478,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     | BANTUAN
     |--------------------------------------------------------------------------
     */
-    Route::get('/bantuan', [BantuanController::class, 'index'])
-        ->name('bantuan');
+    // Tambahkan di dalam grup admin, setelah route bantuan
+    Route::get('/bantuan/cari-penduduk', function (\Illuminate\Http\Request $request) {
+        $nik = $request->query('nik');
+        $penduduk = \App\Models\Penduduk::where('nik', $nik)
+            ->where('status_hidup', 'hidup')
+            ->first();
+
+        if ($penduduk) {
+            return response()->json([
+                'found' => true,
+                'penduduk' => [
+                    'id'           => $penduduk->id,
+                    'nama'         => $penduduk->nama,
+                    'nik'          => $penduduk->nik,
+                    'jenis_kelamin' => $penduduk->jenis_kelamin,
+                    'tanggal_lahir' => optional($penduduk->tanggal_lahir)->format('d/m/Y'),
+                    'alamat'       => $penduduk->alamat,
+                ]
+            ]);
+        }
+
+        return response()->json(['found' => false]);
+    })->name('bantuan.cari-penduduk');
+    
+    Route::resource('bantuan', BantuanController::class);
+    Route::prefix('bantuan/{bantuan}/peserta')->name('bantuan.peserta.')->group(function () {
+        Route::get('create', [BantuanPesertaController::class, 'create'])->name('create');
+        Route::post('/', [BantuanPesertaController::class, 'store'])->name('store');
+        Route::delete('{peserta}', [BantuanPesertaController::class, 'destroy'])->name('destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -590,6 +620,38 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.identitas.des
     ]);
 
     Route::get('/info-desa/wilayah-administratif/{wilayah}/delete', [App\Http\Controllers\Admin\WilayahController::class, 'confirmDestroy'])->name('info-desa.wilayah-administratif.confirm-destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PEMERINTAH DESA
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('pemerintah-desa')->name('pemerintah-desa.')->group(function () {
+
+        Route::get('/',                         [PemerintahDesaController::class, 'index'])
+            ->name('index');
+
+        Route::get('/create',                   [PemerintahDesaController::class, 'create'])
+            ->name('create');
+
+        Route::post('/',                        [PemerintahDesaController::class, 'store'])
+            ->name('store');
+
+        Route::get('/{pemerintahDesa}',         [PemerintahDesaController::class, 'show'])
+            ->name('show');
+
+        Route::get('/{pemerintahDesa}/edit',    [PemerintahDesaController::class, 'edit'])
+            ->name('edit');
+
+        Route::put('/{pemerintahDesa}',         [PemerintahDesaController::class, 'update'])
+            ->name('update');
+
+        Route::delete('/{pemerintahDesa}',      [PemerintahDesaController::class, 'destroy'])
+            ->name('destroy');
+
+        Route::patch('/{pemerintahDesa}/toggle-status', [PemerintahDesaController::class, 'toggleStatus'])
+            ->name('toggle-status');
+    });
 
     /*
     |--------------------------------------------------------------------------

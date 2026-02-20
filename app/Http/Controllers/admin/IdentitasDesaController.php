@@ -22,7 +22,7 @@ class IdentitasDesaController extends Controller {
             ]);
         }
 
-        return view('admin.identitas-desa.index', compact('desa'));
+        return view('admin.info-desa.identitas-desa.index', compact('desa'));
     }
 
     public function edit() {
@@ -37,7 +37,7 @@ class IdentitasDesaController extends Controller {
             ]);
         }
 
-        return view('admin.identitas-desa.edit', compact('desa'));
+        return view('admin.info-desa.identitas-desa.edit', compact('desa'));
     }
 
     public function update(Request $request) {
